@@ -1,0 +1,18 @@
+[
+  {
+    "name": "/Preferences/AxisControlPow",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ControlDeadzone",
+    "type": "double",
+    "value": 0.02,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

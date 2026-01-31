@@ -1,0 +1,27 @@
+{
+  "location": {
+    "front": 11.75,
+    "left": -9.25
+  },
+  "absoluteEncoderOffset": 182,
+  "drive": {
+    "type": "sparkflex_vortex",
+    "id": 7,
+    "canbus": 7
+  },
+  "angle": {
+    "type": "sparkmax",
+    "id": 22,
+    "canbus": 22
+  },
+  "encoder": {
+    "type": "thrifty",
+    "id": 0,
+    "canbus": null
+    },
+  "inverted": {
+    "drive": true,
+    "angle": false
+  },
+  "absoluteEncoderInverted": false
+}
