@@ -1,0 +1,102 @@
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
+      }
+    },
+    {
+      "name": "Tunning",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Controller",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "ControlDeadzone",
+                "x": 256.0,
+                "y": 256.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Number Slider",
+                "properties": {
+                  "topic": "/Preferences/ControlDeadzone",
+                  "period": 0.033,
+                  "data_type": "double",
+                  "min_value": 0.0,
+                  "max_value": 0.35,
+                  "divisions": 5,
+                  "update_continuously": false
+                }
+              },
+              {
+                "title": "AxisControlPow",
+                "x": 384.0,
+                "y": 128.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Number Slider",
+                "properties": {
+                  "topic": "/Preferences/AxisControlPow",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "min_value": 1.0,
+                  "max_value": 5.0,
+                  "divisions": 5,
+                  "update_continuously": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Preferences",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 512.0,
+            "type": "RobotPreferences",
+            "properties": {
+              "topic": "/Preferences",
+              "period": 0.06
+            }
+          },
+          {
+            "title": "Construct Constants",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Construct Constants",
+              "period": 0.06,
+              "show_type": false,
+              "maximize_button_space": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

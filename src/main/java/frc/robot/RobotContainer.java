@@ -67,6 +67,12 @@ public class RobotContainer {
 
         SmartDashboard.putData("Command scheduler", CommandScheduler.getInstance());
 
+        if (Constants.TUNNING) {
+            SmartDashboard.putData("Construct Constants", Commands.runOnce(() -> {
+                Constants.constructEntries();
+            }).ignoringDisable(true));
+        }
+
         if (Robot.isReal()) {
             driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
                 drive.resetGyroOffset();
