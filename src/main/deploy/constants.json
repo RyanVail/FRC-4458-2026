@@ -1,4 +1,11 @@
 {
+  "/Subsystems/Flywheel/tmpSpeed" : 2000.0,
+  "/Subsystems/Flywheel/pid" : {
+    "kP" : 0.125,
+    "kI" : 0.0,
+    "kD" : 0.0,
+    "iZone" : 1.0
+  },
   "AxisControlPow" : 3.0,
   "ControlDeadzone" : 0.02
 }

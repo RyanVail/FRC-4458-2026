@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,17 @@ public final class Constants {
                 Object obj = map.get(key);
                 if (obj instanceof Double) {
                     Preferences.setDouble(key, (Double)obj);
+                } else if (obj instanceof Map) {
+                    Map<String, Object> dict = (Map<String, Object>)obj;
+                    if (dict.get("kP") != null) {
+                        PIDConstants constants = new PIDConstants(
+                            (Double)dict.get("kP"),
+                            (Double)dict.get("kI"),
+                            (Double)dict.get("kD")
+                        );
+
+                        PIDSupplier.loadConstants(key, constants);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -51,6 +63,8 @@ public final class Constants {
         Object entry = entries.get(key);
         if (entry instanceof Double) {
             entries.put(key, Preferences.getDouble(key, (Double)entry));
+        } else if (entry instanceof PIDConstants) {
+            entries.put(key, PIDSupplier.gatherConstants(key));
         }
     }
 
@@ -145,5 +159,12 @@ public final class Constants {
 
     public class IntakeConstants {
         public static final int PORT = 16;
+    }
+
+    public class FlyWheelConstants {
+        public static final int PORT = 15;
+        public static final double MOI = 0.005;
+        public static final double GEARING = 1.0;
+        public static final double[] STD_DEVS = { 0.0 };
     }
 }
