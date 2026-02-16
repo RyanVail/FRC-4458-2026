@@ -29,12 +29,12 @@ import frc.robot.control.BetterTrapezoidProfile;
 public final class Constants {
     static private Map<String, Object> entries = new HashMap<>();
 
-    public static void registerConstant(String key, Object value) {
+    public static final void registerConstant(String key, Object value) {
         entries.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadConstants() {
+    public static final void loadConstants() {
         File file = new File(Filesystem.getDeployDirectory() + "/constants.json");
         ObjectMapper mapper = new ObjectMapper();
 
@@ -62,7 +62,7 @@ public final class Constants {
         }
     }
 
-    private static void updateConstant(String key) {
+    private static final void updateConstant(String key) {
         Object entry = entries.get(key);
         if (entry instanceof Double) {
             entries.put(key, Preferences.getDouble(key, (Double)entry));
@@ -71,13 +71,13 @@ public final class Constants {
         }
     }
 
-    private static void updateConstants() {
+    private static final void updateConstants() {
         for (String key : entries.keySet()) {
             updateConstant(key);
         }
     }
 
-    public static void constructEntries() {
+    public static final void constructEntries() {
         Commands.print("writing to " + Filesystem.getDeployDirectory().toPath().toString()).schedule();
         File file = new File(Filesystem.getDeployDirectory() + "/constants.json");
         ObjectMapper mapper = new ObjectMapper();
@@ -95,7 +95,7 @@ public final class Constants {
 
     public static final boolean ZERO_ENCODERS = false;
 
-    public class InputConstants {
+    public static final class InputConstants {
         public static final int OPERATOR_CONTROLLER_PORT = 0;
         public static final int DRIVE_CONTROLLER_PORT = 1;
 
@@ -105,7 +105,7 @@ public final class Constants {
         public static final double TRIGGER_THRESHOLD = 0.4;
     }
 
-    public class DriveConstants {
+    public static final class DriveConstants {
         public static final double MAX_SPEED = Units.feetToMeters(14.5);
         public static final double DEADZONE = 0.08;
 
@@ -114,7 +114,7 @@ public final class Constants {
                 new PIDConstants(0.82, 0.0, 0.0));
     }
 
-    public class AutoAlignConstants {
+    public static final class AutoAlignConstants {
         public static final PIDController X_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
         public static final PIDController Y_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
         public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
@@ -139,7 +139,7 @@ public final class Constants {
         }
     }
 
-    public class VisionConstants {
+    public static final class VisionConstants {
         record Camera(
             String name,
             Transform3d transform,
@@ -155,7 +155,7 @@ public final class Constants {
         public static final double MAX_SECONDS = 0.8;
     }
 
-    public class FieldConstants {
+    public static final class FieldConstants {
         public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
                 .loadField(AprilTagFields.k2025ReefscapeWelded);
 
@@ -170,11 +170,11 @@ public final class Constants {
         }
     }
 
-    public class IntakeConstants {
+    public static final class IntakeConstants {
         public static final int PORT = 16;
     }
 
-    public class FlyWheelConstants {
+    public static final class FlyWheelConstants {
         public static final int LEFT_PORT = 15;
         public static final int RIGHT_PORT = 14;
         public static final double MOI = 0.005;
@@ -187,7 +187,7 @@ public final class Constants {
         };
     }
 
-    public class HopperConstants {
+    public static final class HopperConstants {
         public static final int LEFT_PORT = 12;
         public static final int RIGHT_PORT = 13;
     }
