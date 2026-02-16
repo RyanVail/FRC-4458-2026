@@ -7,17 +7,16 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
+import frc.robot.Constants.FlyWheelConstants;
 
 public class Flywheel extends SubsystemBase {
     FlywheelIO io;
 
     PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.0));
-
-    DoubleSupplier tmpSpeed = new DoubleSupplier(LPREFIX + "tmpSpeed", 2.0);
 
     double setpoint = 0.0;
 
@@ -27,6 +26,13 @@ public class Flywheel extends SubsystemBase {
     Supplier<Double> distance;
 
     boolean spinning = false;
+
+    private static final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
+    static {
+        for (double[] entry : FlyWheelConstants.VEL_MAP) {
+            velocityMap.put(entry[0], entry[1]);
+        }
+    };
 
     private static final String LPREFIX = "/Subsystems/Flywheel/";
 
@@ -60,6 +66,8 @@ public class Flywheel extends SubsystemBase {
         setRightVoltage(rightOutput);
         io.simulationPeriodic();
 
+        Logger.recordOutput(LPREFIX + "Target", target);
+        Logger.recordOutput(LPREFIX + "Distance", distance.get());
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
 
         Logger.recordOutput(LPREFIX + "LeftVelocity", leftVel);
@@ -71,9 +79,8 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
     }
 
-    // TODO: This should actually be using the distance.
     private double getTargetVelocity() {
-        return tmpSpeed.get();
+        return velocityMap.get(distance.get());
     }
 
     public void start() {

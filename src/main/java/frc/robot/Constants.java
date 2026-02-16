@@ -180,5 +180,10 @@ public final class Constants {
         public static final double MOI = 0.005;
         public static final double GEARING = 1.0;
         public static final double[] STD_DEVS = { 0.0 };
+
+        public static final double[][] VEL_MAP = {
+            { 0.0, 0.0 },
+            { 5.0, 100.0 }
+        };
     }
 }

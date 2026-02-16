@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
@@ -36,7 +37,9 @@ public class RobotContainer {
             driverHID = new CommandGenericHID(InputConstants.DRIVE_CONTROLLER_PORT);
         }
 
-        Supplier<Double> shoot_distance = () -> { return 100.0; };
+        Supplier<Double> shoot_distance = () -> drive.getPose().getTranslation().getDistance(
+            FieldConstants.getTarget()
+        );
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
