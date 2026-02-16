@@ -13,47 +13,88 @@ import frc.robot.Constants;
 import frc.robot.Constants.FlyWheelConstants;
 
 public class FlywheelIOSim implements FlywheelIO {
-    SparkMax spark;
-    SparkMaxSim sparkSim;
-    FlywheelSim mechSim;
+    SparkMax leftSpark;
+    SparkMaxSim leftSparkSim;
+    FlywheelSim leftMechSim;
+
+    SparkMax rightSpark;
+    SparkMaxSim rightSparkSim;
+    FlywheelSim rightMechSim;
 
     public FlywheelIOSim() {
-        DCMotor gearbox = DCMotor.getNEO(1);
-        spark = new SparkMax(FlyWheelConstants.PORT, MotorType.kBrushless);
-        sparkSim = new SparkMaxSim(spark, gearbox);
-        mechSim = new FlywheelSim(
+        DCMotor leftGearbox = DCMotor.getNEO(1);
+        leftSpark = new SparkMax(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
+        leftSparkSim = new SparkMaxSim(leftSpark, leftGearbox);
+        leftMechSim = new FlywheelSim(
             LinearSystemId.createFlywheelSystem(
-                gearbox,
+                leftGearbox,
                 FlyWheelConstants.MOI,
                 FlyWheelConstants.GEARING
             ),
-            gearbox,
+            leftGearbox,
+            FlyWheelConstants.STD_DEVS
+        );
+
+        DCMotor rightGearbox = DCMotor.getNEO(1);
+        rightSpark = new SparkMax(FlyWheelConstants.RIGHT_PORT, MotorType.kBrushless);
+        rightSparkSim = new SparkMaxSim(rightSpark, rightGearbox);
+        rightMechSim = new FlywheelSim(
+            LinearSystemId.createFlywheelSystem(
+                rightGearbox,
+                FlyWheelConstants.MOI,
+                FlyWheelConstants.GEARING
+            ),
+            rightGearbox,
             FlyWheelConstants.STD_DEVS
         );
     }
 
     @Override
-    public void setVoltage(double voltage) {
-        spark.setVoltage(voltage);
+    public void setLeftVoltage(double voltage) {
+        leftSpark.setVoltage(voltage);
     }
 
     @Override
-    public double getVelocity() {
-        return spark.getEncoder().getVelocity();
+    public void setRightVoltage(double voltage) {
+        rightSpark.setVoltage(voltage);
     }
 
     @Override
-    public double getVoltage() {
-        return spark.getAppliedOutput() * RoboRioSim.getVInVoltage();
+    public double getLeftVelocity() {
+        return leftSpark.getEncoder().getVelocity();
+    }
+
+    @Override
+    public double getRightVelocity() {
+        return rightSpark.getEncoder().getVelocity();
+    }
+
+    @Override
+    public double getLeftVoltage() {
+        return leftSpark.getAppliedOutput() * RoboRioSim.getVInVoltage();
+    }
+
+    @Override
+    public double getRightVoltage() {
+        return rightSpark.getAppliedOutput() * RoboRioSim.getVInVoltage();
     }
 
     @Override
     public void simulationPeriodic() {
-        mechSim.setInput(sparkSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
-        mechSim.update(Constants.LOOP_TIME);
+        leftMechSim.setInput(leftSparkSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        leftMechSim.update(Constants.LOOP_TIME);
 
-        sparkSim.iterate(
-            mechSim.getAngularVelocityRPM(),
+        leftSparkSim.iterate(
+            leftMechSim.getAngularVelocityRPM(),
+            RoboRioSim.getVInVoltage(),
+            Constants.LOOP_TIME
+        );
+
+        rightMechSim.setInput(rightSparkSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        rightMechSim.update(Constants.LOOP_TIME);
+
+        rightSparkSim.iterate(
+            rightMechSim.getAngularVelocityRPM(),
             RoboRioSim.getVInVoltage(),
             Constants.LOOP_TIME
         );
@@ -61,7 +102,8 @@ public class FlywheelIOSim implements FlywheelIO {
         // TODO: This should be done somewhere else.
         RoboRioSim.setVInVoltage(
             BatterySim.calculateDefaultBatteryLoadedVoltage(
-                mechSim.getCurrentDrawAmps()
+                leftMechSim.getCurrentDrawAmps(),
+                rightMechSim.getCurrentDrawAmps()
             )
         );
     }

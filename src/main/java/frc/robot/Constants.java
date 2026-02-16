@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -162,7 +161,8 @@ public final class Constants {
     }
 
     public class FlyWheelConstants {
-        public static final int PORT = 15;
+        public static final int LEFT_PORT = 15;
+        public static final int RIGHT_PORT = 14;
         public static final double MOI = 0.005;
         public static final double GEARING = 1.0;
         public static final double[] STD_DEVS = { 0.0 };

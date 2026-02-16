@@ -1,11 +1,15 @@
 package frc.robot.subsystems.flywheel;
 
 public interface FlywheelIO {
-    public void setVoltage(double voltage);
+    public void setLeftVoltage(double voltage);
+    public void setRightVoltage(double voltage);
 
-    public double getVelocity();
+    public double getLeftVelocity();
+    public double getRightVelocity();
 
-    public double getVoltage();
+
+    public double getLeftVoltage();
+    public double getRightVoltage();
 
     public default void simulationPeriodic() {}
 }
