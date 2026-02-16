@@ -6,16 +6,21 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.PIDSupplier;
 import frc.robot.VisionManager;
 
 public class Drive extends SubsystemBase {
@@ -31,14 +36,21 @@ public class Drive extends SubsystemBase {
         }
     }
 
+    public static final String LPREFIX = "/Subsystems/Drive/";
+
     private DriveIO io;
     private Rotation2d gyroOffset;
 
-    public static final String LPREFIX = "/Subsystems/Drive/";
+    private boolean targetLock = false;
+    private Translation2d target = new Translation2d(4.5, 4.1);
+    private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(0));
+    private double targetLockRadians = 0.0;
 
     public Drive(DriveIO io) {
         this.io = io;
         this.io.resetPose(new Pose2d(new Translation2d(1.0, 1.0), new Rotation2d()));
+
+        targetPID.get().enableContinuousInput(0, 2 * Math.PI);
     }
 
     @Override
@@ -58,6 +70,19 @@ public class Drive extends SubsystemBase {
         }
 
         io.addVisionEstimations(poses);
+
+        Pose2d pose = getPose();
+        Translation2d diff = getTarget().minus(pose.getTranslation());
+        Rotation2d targetRot = diff.getAngle();
+
+        PIDController pid = targetPID.get();
+        if (targetLock) {
+            pid.setSetpoint(targetRot.getRadians());
+            targetLockRadians = pid.calculate(pose.getRotation().getRadians());
+        }
+
+        Logger.recordOutput(LPREFIX + "targetRot", targetRot);
+        Logger.recordOutput(LPREFIX + "targetLock", targetLock);
     }
 
     /**
@@ -88,6 +113,10 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
+        if (targetLock) {
+            speeds.omegaRadiansPerSecond = targetLockRadians;
+        }
+
         this.io.drive(speeds);
     }
 
@@ -125,5 +154,33 @@ public class Drive extends SubsystemBase {
 
     public void stop() {
         this.driveRobotRelative(new ChassisSpeeds());
+    }
+
+    public Translation2d getTarget() {
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
+            return target;
+        } else {
+            return FlippingUtil.flipFieldPosition(target);
+        }
+    }
+
+    public void toggleTargetLock() {
+        if (targetLock) {
+            unlockOnTarget();
+        } else {
+            lockOnTarget();
+        }
+    }
+
+    public void lockOnTarget() {
+        if (!targetLock) {
+            targetPID.get().reset();
+        }
+
+        targetLock = true;
+    }
+
+    public void unlockOnTarget() {
+        targetLock = false;
     }
 }

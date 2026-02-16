@@ -97,6 +97,10 @@ public class RobotContainer {
             flywheel.stop();
         }));
 
+        operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
+            drive.toggleTargetLock();
+        }));
+
         operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
             intake.setVoltage(4.0);
         }));
