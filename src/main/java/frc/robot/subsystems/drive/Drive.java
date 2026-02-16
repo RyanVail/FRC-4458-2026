@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.PIDSupplier;
 import frc.robot.VisionManager;
+import frc.robot.Constants.FieldConstants;
 
 public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
@@ -42,7 +43,6 @@ public class Drive extends SubsystemBase {
     private Rotation2d gyroOffset;
 
     private boolean targetLock = false;
-    private Translation2d target = new Translation2d(4.5, 4.1);
     private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(0));
     private double targetLockRadians = 0.0;
 
@@ -72,7 +72,7 @@ public class Drive extends SubsystemBase {
         io.addVisionEstimations(poses);
 
         Pose2d pose = getPose();
-        Translation2d diff = getTarget().minus(pose.getTranslation());
+        Translation2d diff = FieldConstants.getTarget().minus(pose.getTranslation());
         Rotation2d targetRot = diff.getAngle();
 
         PIDController pid = targetPID.get();
@@ -154,14 +154,6 @@ public class Drive extends SubsystemBase {
 
     public void stop() {
         this.driveRobotRelative(new ChassisSpeeds());
-    }
-
-    public Translation2d getTarget() {
-        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
-            return target;
-        } else {
-            return FlippingUtil.flipFieldPosition(target);
-        }
     }
 
     public void toggleTargetLock() {

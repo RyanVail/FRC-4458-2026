@@ -8,16 +8,20 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignPose;
 import frc.robot.control.BetterTrapezoidProfile;
@@ -154,6 +158,16 @@ public final class Constants {
     public class FieldConstants {
         public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
                 .loadField(AprilTagFields.k2025ReefscapeWelded);
+
+        private static final Translation2d target = new Translation2d(4.5, 4.1);
+
+        public static final Translation2d getTarget() {
+            if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
+                return target;
+            } else {
+                return FlippingUtil.flipFieldPosition(target);
+            }
+        }
     }
 
     public class IntakeConstants {
