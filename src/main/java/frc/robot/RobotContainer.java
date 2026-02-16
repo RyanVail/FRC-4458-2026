@@ -89,15 +89,15 @@ public class RobotContainer {
             }));
         }
 
-        operatorHID.button(XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             flywheel.start();
         }));
 
-        operatorHID.button(XboxController.Button.kA.value).onFalse(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             flywheel.stop();
         }));
 
-        operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             drive.toggleTargetLock();
         }));
 
