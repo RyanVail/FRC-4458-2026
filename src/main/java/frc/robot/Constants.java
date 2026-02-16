@@ -186,4 +186,9 @@ public final class Constants {
             { 5.0, 100.0 }
         };
     }
+
+    public class HopperConstants {
+        public static final int LEFT_PORT = 12;
+        public static final int RIGHT_PORT = 13;
+    }
 }

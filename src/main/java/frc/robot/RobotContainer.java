@@ -16,6 +16,9 @@ import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
+import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperIOSim;
+import frc.robot.subsystems.hopper.HopperIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSpark;
 
@@ -26,6 +29,7 @@ public class RobotContainer {
     Drive drive;
     Intake intake;
     Flywheel flywheel;
+    Hopper hopper;
 
     public RobotContainer() {
         Constants.loadConstants();
@@ -44,10 +48,12 @@ public class RobotContainer {
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
             flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance);
+            hopper = new Hopper(new HopperIOSim());
         } else {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
             flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance);
+            hopper = new Hopper(new HopperIOSpark());
         }
 
         // VisionManager.initialize(drive);
@@ -92,15 +98,23 @@ public class RobotContainer {
             }));
         }
 
-        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             flywheel.start();
         }));
 
-        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             flywheel.stop();
         }));
 
-        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+            hopper.start();
+        }));
+
+        operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
+            hopper.stop();
+        }));
+
+        operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
             drive.toggleTargetLock();
         }));
 
