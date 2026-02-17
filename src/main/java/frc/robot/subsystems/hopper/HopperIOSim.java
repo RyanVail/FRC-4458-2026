@@ -5,6 +5,10 @@ public class HopperIOSim implements HopperIO {
     }
 
     @Override
-    public void setVoltage(double voltage) {
+    public void setconveyorVoltage(double voltage) {
+    }
+
+    @Override
+    public void setShooterVoltage(double voltage) {
     }
 }

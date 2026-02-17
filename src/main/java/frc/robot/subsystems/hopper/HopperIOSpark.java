@@ -6,17 +6,21 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.Constants.HopperConstants;
 
 public class HopperIOSpark implements HopperIO {
-    SparkMax leftSpark;
-    SparkMax rightSpark;
+    SparkMax conveyorSpark;
+    SparkMax shooterSpark;
 
     public HopperIOSpark() {
-        leftSpark = new SparkMax(HopperConstants.LEFT_PORT, MotorType.kBrushless);
-        rightSpark = new SparkMax(HopperConstants.RIGHT_PORT, MotorType.kBrushless);
+        conveyorSpark = new SparkMax(HopperConstants.CONVEYOR_PORT, MotorType.kBrushless);
+        shooterSpark = new SparkMax(HopperConstants.SHOOTER_PORT, MotorType.kBrushless);
     }
 
     @Override
-    public void setVoltage(double voltage) {
-        leftSpark.setVoltage(voltage);
-        rightSpark.setVoltage(voltage);
+    public void setconveyorVoltage(double voltage) {
+        conveyorSpark.setVoltage(voltage);
+    }
+
+    @Override
+    public void setShooterVoltage(double voltage) {
+        shooterSpark.setVoltage(voltage);
     }
 }

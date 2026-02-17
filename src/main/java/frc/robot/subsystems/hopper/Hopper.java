@@ -9,7 +9,8 @@ public class Hopper extends SubsystemBase {
     HopperIO io;
     boolean spinning = false;
 
-    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 3.0);
+    DoubleSupplier conveyorVoltage = new DoubleSupplier(LPREFIX + "conveyorVoltage", 3.0);
+    DoubleSupplier shooterVoltage = new DoubleSupplier(LPREFIX + "shooterVoltage", 3.0);
 
     private static final String LPREFIX = "/Subsystems/Hopper/";
 
@@ -19,7 +20,8 @@ public class Hopper extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setVoltage(spinning ? voltage.get() : 0.0);
+        setconveyorVoltage(spinning ? conveyorVoltage.get() : 0.0);
+        setShooterVoltage(spinning ? shooterVoltage.get() : 0.0);
 
         Logger.recordOutput(LPREFIX + "Spinning", spinning);
     }
@@ -32,7 +34,11 @@ public class Hopper extends SubsystemBase {
         spinning = false;
     }
 
-    public void setVoltage(double voltage) {
-        io.setVoltage(voltage);
+    public void setconveyorVoltage(double voltage) {
+        io.setconveyorVoltage(voltage);
+    }
+
+    public void setShooterVoltage(double voltage) {
+        io.setShooterVoltage(voltage);
     }
 }

@@ -205,7 +205,7 @@ public final class Constants {
     }
 
     public static final class HopperConstants {
-        public static final int LEFT_PORT = 12;
-        public static final int RIGHT_PORT = 13;
+        public static final int CONVEYOR_PORT = 9;
+        public static final int SHOOTER_PORT = 11;
     }
 }
