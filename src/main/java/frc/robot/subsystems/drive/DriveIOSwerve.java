@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
@@ -22,7 +23,8 @@ public class DriveIOSwerve implements DriveIO {
     public DriveIOSwerve() {
         try {
             File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(12.5));
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(
+                    Units.feetToMeters(DriveConstants.MAX_SPEED));
         } catch (IOException e) {
             e.printStackTrace();
         }
