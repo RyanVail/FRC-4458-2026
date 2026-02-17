@@ -43,15 +43,14 @@ public final class Constants {
             for (String key : map.keySet()) {
                 Object obj = map.get(key);
                 if (obj instanceof Double) {
-                    Preferences.setDouble(key, (Double)obj);
+                    Preferences.setDouble(key, (Double) obj);
                 } else if (obj instanceof Map) {
-                    Map<String, Object> dict = (Map<String, Object>)obj;
+                    Map<String, Object> dict = (Map<String, Object>) obj;
                     if (dict.get("kP") != null) {
                         PIDConstants constants = new PIDConstants(
-                            (Double)dict.get("kP"),
-                            (Double)dict.get("kI"),
-                            (Double)dict.get("kD")
-                        );
+                                (Double) dict.get("kP"),
+                                (Double) dict.get("kI"),
+                                (Double) dict.get("kD"));
 
                         PIDSupplier.loadConstants(key, constants);
                     }
@@ -65,7 +64,7 @@ public final class Constants {
     private static final void updateConstant(String key) {
         Object entry = entries.get(key);
         if (entry instanceof Double) {
-            entries.put(key, Preferences.getDouble(key, (Double)entry));
+            entries.put(key, Preferences.getDouble(key, (Double) entry));
         } else if (entry instanceof PIDConstants) {
             entries.put(key, PIDSupplier.gatherConstants(key));
         }
@@ -141,15 +140,15 @@ public final class Constants {
 
     public static final class VisionConstants {
         record Camera(
-            String name,
-            Transform3d transform,
-            int width,
-            int height,
-            Rotation2d fov,
-            int fps,
-            double avg_latency_ms,
-            double latency_std_dev_ms
-        ) {};
+                String name,
+                Transform3d transform,
+                int width,
+                int height,
+                Rotation2d fov,
+                int fps,
+                double avg_latency_ms,
+                double latency_std_dev_ms) {
+        };
 
         public static final Camera CAMERAS[] = {};
         public static final double MAX_SECONDS = 0.8;
@@ -172,6 +171,24 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int PORT = 16;
+
+        /**
+         * The port of the motor that controls the rotation of the intake.
+         */
+        public static final int ROT_PORT = 17;
+
+        /**
+         * The rotation motor's position when the robot starts.
+         * 
+         * Should be kept zero because it's relative and the intake is always started
+         * up.
+         */
+        public static final double ROT_UP_POS = 0.0;
+
+        /**
+         * The rotation motor's position when in the down position.
+         */
+        public static final double ROT_DOWN_POS = 1.0;
     }
 
     public static final class FlyWheelConstants {
@@ -182,8 +199,8 @@ public final class Constants {
         public static final double[] STD_DEVS = { 0.0 };
 
         public static final double[][] VEL_MAP = {
-            { 0.0, 0.0 },
-            { 5.0, 100.0 }
+                { 0.0, 0.0 },
+                { 5.0, 100.0 }
         };
     }
 
