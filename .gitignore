@@ -138,7 +138,7 @@ $RECYCLE.BIN/
 ### Gradle ###
 .gradle
 /build/
-/gradle/wrapper/
+#/gradle/wrapper/
 
 # Ignore Gradle GUI config
 gradle-app.setting
