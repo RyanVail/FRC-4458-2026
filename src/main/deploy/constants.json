@@ -12,5 +12,6 @@
     "kD" : 0.0,
     "iZone" : 1.0
   },
-  "ControlDeadzone" : 0.02
+  "ControlDeadzone" : 0.02,
+  "/Subsystems/Intake/voltage" : 2.0
 }

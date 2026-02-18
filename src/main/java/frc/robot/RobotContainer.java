@@ -119,11 +119,11 @@ public class RobotContainer {
         }));
 
         operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
-            intake.setVoltage(4.0);
+            intake.start();
         }));
 
         operatorHID.button(XboxController.Button.kB.value).onFalse(Commands.runOnce(() -> {
-            intake.setVoltage(0.0);
+            intake.stop();
         }));
 
         drive.setDefaultCommand(

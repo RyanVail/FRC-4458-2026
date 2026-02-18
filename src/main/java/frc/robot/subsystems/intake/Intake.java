@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.Constants.IntakeConstants;
 
@@ -12,6 +13,9 @@ public class Intake extends SubsystemBase {
     IntakeIO io;
 
     PIDSupplier rotPID = new PIDSupplier(LPREFIX + "rotPID", new PIDConstants(0.0));
+    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 2.0);
+
+    boolean spinning = false;
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 
@@ -23,14 +27,26 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput(LPREFIX + "Velocity", getVelocity());
         Logger.recordOutput(LPREFIX + "Voltage", getVoltage());
-        
+
         double rotOutput = rotPID.get().calculate(getRotPosition());
         io.setRotVoltage(rotOutput);
 
         Logger.recordOutput(LPREFIX + "RotPosition", getRotPosition());
         Logger.recordOutput(LPREFIX + "RotOutput", rotOutput);
+    
+        if (spinning) {
+            setVoltage(spinning ? voltage.get() : 0.0);
+        }
 
         io.simulationPeriodic();
+    }
+
+    public void start() {
+        spinning = true;
+    }
+
+    public void stop() {
+        spinning = false;
     }
 
     public void moveDown() {
