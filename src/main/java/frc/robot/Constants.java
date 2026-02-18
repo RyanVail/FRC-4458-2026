@@ -200,7 +200,7 @@ public final class Constants {
 
         public static final double[][] VEL_MAP = {
                 { 0.0, 0.0 },
-                { 5.0, 100.0 }
+                { 5.0, 5000.0 }
         };
     }
 
