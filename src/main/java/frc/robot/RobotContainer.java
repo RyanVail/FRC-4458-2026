@@ -16,6 +16,8 @@ import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.hood.HoodIOSpark;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIOSim;
 import frc.robot.subsystems.hopper.HopperIOSpark;
@@ -30,6 +32,7 @@ public class RobotContainer {
     Intake intake;
     Flywheel flywheel;
     Hopper hopper;
+    Hood hood;
 
     public RobotContainer() {
         Constants.loadConstants();
@@ -54,6 +57,7 @@ public class RobotContainer {
             intake = new Intake(new IntakeIOSpark());
             flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance);
             hopper = new Hopper(new HopperIOSpark());
+            hood = new Hood(new HoodIOSpark(), shoot_distance);
         }
 
         // VisionManager.initialize(drive);

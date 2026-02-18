@@ -204,6 +204,26 @@ public final class Constants {
         };
     }
 
+    public static final class HoodConstants {
+        public static final int LEFT_CHANNEL = 0;
+        public static final int RIGHT_CHANNEL = 1;
+
+        /**
+         * The max length of the servo in mm. 
+         */
+        public static final double LENGTH = 100.0;
+
+        /**
+         * The speed of ths servo in mm per second.
+         */
+        public static final double SPEED = 22.5;
+
+        public static final double[][] POS_MAP = {
+                { 0.0, 0.0 },
+                { 0.0, 100.0 }
+        };
+    }
+
     public static final class HopperConstants {
         public static final int CONVEYOR_PORT = 9;
         public static final int SHOOTER_PORT = 11;

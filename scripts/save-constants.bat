@@ -1,1 +1,1 @@
-scp lvuser@roboRIO-4458-frc.local:/home/lvuser/deploy/constants.json ../src/main/deploy/constants.json
+scp lvuser@roboRIO-4458-frc.local:/home/lvuser/deploy/constants.json src/main/deploy/constants.json
