@@ -170,12 +170,12 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int PORT = 16;
+        public static final int PORT = 12;
 
         /**
          * The port of the motor that controls the rotation of the intake.
          */
-        public static final int ROT_PORT = 17;
+        public static final int ROT_PORT = 8;
 
         /**
          * The rotation motor's position when the robot starts.
@@ -192,7 +192,7 @@ public final class Constants {
     }
 
     public static final class FlyWheelConstants {
-        public static final int LEFT_PORT = 15;
+        public static final int LEFT_PORT = 10;
         public static final int RIGHT_PORT = 14;
         public static final double MOI = 0.005;
         public static final double GEARING = 1.0;
