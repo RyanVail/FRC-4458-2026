@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
+import frc.robot.commands.Shoot;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.flywheel.Flywheel;
@@ -45,8 +46,7 @@ public class RobotContainer {
         }
 
         Supplier<Double> shoot_distance = () -> drive.getPose().getTranslation().getDistance(
-            FieldConstants.getTarget()
-        );
+                FieldConstants.getTarget());
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
@@ -62,7 +62,7 @@ public class RobotContainer {
 
         // VisionManager.initialize(drive);
         // VisionManager.defaultCameras();
-        // configureAuto();
+        configureAuto();
 
         configureBindings();
         drive.resetGyroOffset();
@@ -76,6 +76,32 @@ public class RobotContainer {
         NamedCommands.registerCommand(
                 "KeepStopDrive",
                 Commands.run(() -> drive.stop()));
+
+        NamedCommands.registerCommand(
+                "StartFlywheel",
+                Commands.run(() -> flywheel.start()));
+
+        NamedCommands.registerCommand(
+                "StartIntake",
+                Commands.run(() -> intake.start()));
+
+        NamedCommands.registerCommand(
+                "StopIntake",
+                Commands.run(() -> intake.stop()));
+
+        NamedCommands.registerCommand(
+                "StartHopper",
+                Commands.run(() -> hopper.start()));
+
+        NamedCommands.registerCommand(
+                "StopHopper",
+                Commands.run(() -> hopper.stop()));
+
+        NamedCommands.registerCommand(
+                "ToggleTargetLock",
+                Commands.run(() -> drive.toggleTargetLock()));
+
+        NamedCommands.registerCommand("Shoot", new Shoot(flywheel, hopper));
 
         AutoManager.configureAutos(drive);
     }
