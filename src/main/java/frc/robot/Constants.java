@@ -200,13 +200,13 @@ public final class Constants {
 
         public static final double[][] VEL_MAP = {
                 { 0.0, 0.0 },
-                { 5.0, 5000.0 }
+                { 5.0, 3000.0 }
         };
     }
 
     public static final class HoodConstants {
-        public static final int LEFT_CHANNEL = 0;
-        public static final int RIGHT_CHANNEL = 1;
+        public static final int LEFT_CHANNEL = 4;
+        public static final int RIGHT_CHANNEL = 5;
 
         /**
          * The max length of the servo in mm. 
