@@ -60,8 +60,7 @@ public class RobotContainer {
             hood = new Hood(new HoodIOSpark(), shoot_distance);
         }
 
-        // VisionManager.initialize(drive);
-        // VisionManager.defaultCameras();
+        VisionManager.initialize();
         configureAuto();
 
         configureBindings();
