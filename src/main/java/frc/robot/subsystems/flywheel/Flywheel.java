@@ -9,6 +9,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.Constants.FlyWheelConstants;
 
@@ -33,6 +34,8 @@ public class Flywheel extends SubsystemBase {
             velocityMap.put(entry[0], entry[1]);
         }
     };
+
+    DoubleSupplier tmpVelocity = new DoubleSupplier(LPREFIX + "tmpVelocity", 0.0);
 
     private static final String LPREFIX = "/Subsystems/Flywheel/";
 
@@ -59,8 +62,11 @@ public class Flywheel extends SubsystemBase {
         double leftVel = getLeftVelocity();
         double rightVel = getRightVelocity();
 
-        double leftOutput = left.calculate(leftVel);
-        double rightOutput = right.calculate(rightVel);
+        // double leftOutput = left.calculate(leftVel);
+        // double rightOutput = right.calculate(rightVel);
+
+        double leftOutput = tmpVelocity.get();
+        double rightOutput = tmpVelocity.get();
 
         setLeftVoltage(leftOutput);
         setRightVoltage(rightOutput);
