@@ -151,6 +151,7 @@ public final class Constants {
         public static final Method METHOD = Method.AVERAGE_BEST;
 
         public enum Method {
+            COPROC_MULTI_TAG,
             AVERAGE_BEST,
             LEAST_AMBIGUOUS,
             CLOSEST_HEIGHT,

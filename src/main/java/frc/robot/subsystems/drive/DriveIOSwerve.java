@@ -82,19 +82,6 @@ public class DriveIOSwerve implements DriveIO {
     }
 
     @Override
-    public void addVisionEstimationsPnp(List<PnpResult> poses) {
-        for (PnpResult result : poses) {
-            if (result != null && result.best != null) {
-                swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(
-                        new Pose2d(
-                                result.best.getTranslation().toTranslation2d(),
-                                result.best.getRotation().toRotation2d()),
-                        Timer.getFPGATimestamp());
-            }
-        }
-    }
-
-    @Override
     public Rotation2d getGyroRotation() {
         return swerveDrive.getGyroRotation3d().toRotation2d();
     }

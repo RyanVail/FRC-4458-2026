@@ -34,22 +34,6 @@ public class VisionManager {
         }
     }
 
-    public static List<PnpResult> getEstimatedPNPResults() {
-        List<PnpResult> poses = new ArrayList<>();
-
-        for (int i = 0; i < NUM_CAMERAS; i++) {
-            List<PhotonPipelineResult> results = cameras[i].getAllUnreadResults();
-            for (PhotonPipelineResult r : results) {
-                Optional<MultiTargetPNPResult> pose = r.getMultiTagResult();
-                if (pose.isPresent()) {
-                    poses.add(pose.get().estimatedPose);
-                }
-            }
-        }
-
-        return poses;
-    }
-
     public static List<EstimatedRobotPose> getEstimatedPoses() {
         List<EstimatedRobotPose> poses = new ArrayList<>();
 
@@ -57,6 +41,7 @@ public class VisionManager {
             List<PhotonPipelineResult> results = cameras[i].getAllUnreadResults();
             for (PhotonPipelineResult r : results) {
                 Optional<EstimatedRobotPose> pose = switch (VisionConstants.METHOD) {
+                    case COPROC_MULTI_TAG -> pose = estimators[i].estimateCoprocMultiTagPose(r);
                     case AVERAGE_BEST -> pose = estimators[i].estimateAverageBestTargetsPose(r);
                     case LEAST_AMBIGUOUS -> pose = estimators[i].estimateLowestAmbiguityPose(r);
                     case CLOSEST_HEIGHT -> pose = estimators[i].estimateClosestToCameraHeightPose(r);

@@ -70,16 +70,6 @@ public class Drive extends SubsystemBase {
 
         io.addVisionEstimations(poses);
 
-        List<PnpResult> pnp = VisionManager.getEstimatedPNPResults();
-        for (int i = 0; i < pnp.size(); i++) {
-            if (pnp.get(i) == null)
-                continue;
-
-            Logger.recordOutput(LPREFIX + "PnpTransform" + i, pnp.get(i).best);
-        }
-
-        io.addVisionEstimationsPnp(pnp);
-
         Pose2d pose = getPose();
         Translation2d diff = FieldConstants.getTarget().minus(pose.getTranslation());
         Rotation2d targetRot = diff.getAngle();
