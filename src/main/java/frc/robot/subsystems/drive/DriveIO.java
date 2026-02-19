@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import java.util.List;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PnpResult;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,6 +24,7 @@ public interface DriveIO {
     public ChassisSpeeds getRobotRelativeSpeeds();
 
     public void addVisionEstimations(List<EstimatedRobotPose> poses);
+    public void addVisionEstimationsPnp(List<PnpResult> poses);
 
     public void periodic();
 

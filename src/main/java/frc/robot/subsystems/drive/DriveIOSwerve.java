@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PnpResult;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import swervelib.SwerveDrive;
@@ -75,6 +77,19 @@ public class DriveIOSwerve implements DriveIO {
                 swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(
                         pose.estimatedPose.toPose2d(),
                         pose.timestampSeconds);
+            }
+        }
+    }
+
+    @Override
+    public void addVisionEstimationsPnp(List<PnpResult> poses) {
+        for (PnpResult result : poses) {
+            if (result != null && result.best != null) {
+                swerveDrive.swerveDrivePoseEstimator.addVisionMeasurement(
+                        new Pose2d(
+                                result.best.getTranslation().toTranslation2d(),
+                                result.best.getRotation().toRotation2d()),
+                        Timer.getFPGATimestamp());
             }
         }
     }

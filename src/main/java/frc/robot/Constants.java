@@ -144,6 +144,17 @@ public final class Constants {
 
         public static final Camera CAMERAS[] = {};
         public static final double MAX_SECONDS = 0.8;
+
+        /**
+         * The method to use when estimating a pose from april tags.
+         */
+        public static final Method METHOD = Method.AVERAGE_BEST;
+
+        public enum Method {
+            AVERAGE_BEST,
+            LEAST_AMBIGUOUS,
+            CLOSEST_HEIGHT,
+        }
     }
 
     public static final class FieldConstants {
