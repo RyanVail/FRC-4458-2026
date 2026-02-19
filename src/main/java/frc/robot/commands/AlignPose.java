@@ -2,12 +2,16 @@ package frc.robot.commands;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.config.PIDConstants;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.PIDSupplier;
 import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.control.BetterTrapezoidProfile.State;
 import frc.robot.subsystems.drive.Drive;
@@ -24,6 +28,12 @@ public class AlignPose extends Command {
     State YStateSetpoint;
 
     boolean finished;
+
+    private static final String LPREFIX = "/Commands/AlignPose/";
+
+    static final PIDSupplier xPID = new PIDSupplier(LPREFIX + "xPID", new PIDConstants(0));
+    static final PIDSupplier yPID = new PIDSupplier(LPREFIX + "yPID", new PIDConstants(5.2, 0.0, 0.0));
+    static final PIDSupplier anglePID = new PIDSupplier(LPREFIX + "anglePID", new PIDConstants(6.0, 0.0, 0.0));
 
     public enum AlignCamera {
         NONE,
@@ -72,6 +82,9 @@ public class AlignPose extends Command {
 
         if (target != null)
             setTarget(target);
+
+        
+        anglePID.get().enableContinuousInput(0, Units.degreesToRadians(360.0));
     }
 
     public void setTarget(Target target) {
@@ -95,12 +108,12 @@ public class AlignPose extends Command {
         lastXState = new State(start.getX(), speeds.vxMetersPerSecond);
         lastYState = new State(start.getY(), speeds.vyMetersPerSecond);
 
-        AutoAlignConstants.X_CONTROLLER.reset();
-        AutoAlignConstants.Y_CONTROLLER.reset();
-        AutoAlignConstants.ANGLE_CONTROLLER.reset();
+        xPID.get().reset();
+        yPID.get().reset();
+        anglePID.get().reset();
 
-        AutoAlignConstants.ANGLE_CONTROLLER.setSetpoint(target.pose.getRotation().getRadians());
-        AutoAlignConstants.ANGLE_CONTROLLER.setTolerance(target.constraints.rot_dist);
+        anglePID.get().setSetpoint(target.pose.getRotation().getRadians());
+        anglePID.get().setTolerance(target.constraints.rot_dist);
     }
 
     /**
@@ -130,16 +143,16 @@ public class AlignPose extends Command {
         lastXState = AutoAlignConstants.X_PROFILE.calculate(Constants.LOOP_TIME, XStateSetpoint, lastXState);
         lastYState = AutoAlignConstants.Y_PROFILE.calculate(Constants.LOOP_TIME, YStateSetpoint, lastYState);
 
-        AutoAlignConstants.X_CONTROLLER.setSetpoint(lastXState.position);
-        AutoAlignConstants.Y_CONTROLLER.setSetpoint(lastYState.position);
+        xPID.get().setSetpoint(lastXState.position);
+        yPID.get().setSetpoint(lastYState.position);
 
         Logger.recordOutput("AutoAlignState", new Pose2d(lastXState.position, lastYState.position, new Rotation2d()));
 
         // TODO: It might be better for this to be gyro relative once the gyro offset during auto starts working.
         drive.driveVisionRelative(
-                AutoAlignConstants.X_CONTROLLER.calculate(pose.getX()),
-                AutoAlignConstants.Y_CONTROLLER.calculate(pose.getY()),
-                AutoAlignConstants.ANGLE_CONTROLLER.calculate(pose.getRotation().getRadians()));
+                xPID.get().calculate(pose.getX()),
+                yPID.get().calculate(pose.getY()),
+                anglePID.get().calculate(pose.getRotation().getRadians()));
     }
 
     @Override
@@ -149,7 +162,7 @@ public class AlignPose extends Command {
 
         return drive.getPose().getTranslation()
                 .getDistance(target.pose.getTranslation()) <= this.target.constraints.dist
-                && AutoAlignConstants.ANGLE_CONTROLLER.atSetpoint();
+                && anglePID.get().atSetpoint();
     }
 
     @Override

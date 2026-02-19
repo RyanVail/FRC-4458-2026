@@ -114,10 +114,6 @@ public final class Constants {
     }
 
     public static final class AutoAlignConstants {
-        public static final PIDController X_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
-        public static final PIDController Y_CONTROLLER = new PIDController(5.2, 0.0, 0.0);
-        public static final PIDController ANGLE_CONTROLLER = new PIDController(6.0, 0.0, 0.0);
-
         public static final BetterTrapezoidProfile X_PROFILE = new BetterTrapezoidProfile(
                 new BetterTrapezoidProfile.Constraints(3.2, 1.4));
         public static final BetterTrapezoidProfile Y_PROFILE = new BetterTrapezoidProfile(
@@ -132,10 +128,6 @@ public final class Constants {
                 Units.inchesToMeters(0.67),
                 Units.degreesToRadians(0.5),
                 new ChassisSpeeds(0.0, 0.0, 0.0));
-
-        static {
-            ANGLE_CONTROLLER.enableContinuousInput(0, Units.degreesToRadians(360.0));
-        }
     }
 
     public static final class VisionConstants {
