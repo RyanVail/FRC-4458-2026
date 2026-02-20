@@ -3,16 +3,16 @@
     "front": -11.75,
     "left": 9.25
   },
-  "absoluteEncoderOffset": 15.9,
+  "absoluteEncoderOffset": 244.0,
   "drive": {
     "type": "sparkflex_vortex",
-    "id": 3,
-    "canbus": 3
+    "id": 5,
+    "canbus": 5
   },
   "angle": {
     "type": "sparkmax",
-    "id": 6,
-    "canbus": 6
+    "id": 4,
+    "canbus": 4
   },
   "encoder": {
     "type": "thrifty",
