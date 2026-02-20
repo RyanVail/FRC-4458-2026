@@ -7,8 +7,13 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.Constants.FlyWheelConstants;
@@ -19,12 +24,45 @@ public class Flywheel extends SubsystemBase {
     PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.0));
 
+    SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(0, 0.00215);
+    SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(0, 0.00215);
+
     double setpoint = 0.0;
 
     /**
      * Supplies the distance from the robot to the target.
      */
     Supplier<Double> distance;
+
+    public SysIdRoutine left = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism((Voltage v) -> {
+            io.setLeftVoltage(v.magnitude());
+        },
+        log -> {
+                // Record a frame for the shooter motor.
+                log.motor("flywheel-left")
+                    .voltage(
+                        Units.Volt.of(io.getLeftVoltage()))
+                    .angularPosition(Units.Radians.of(io.getLeftPosition()))
+                    .angularVelocity(Units.RadiansPerSecond.of(io.getLeftVelocity() * 2 * Math.PI / 60));
+        }
+        , this));
+
+    public SysIdRoutine right = new SysIdRoutine(
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism((Voltage v) -> {
+            io.setRightVoltage(v.magnitude());
+        },
+        log -> {
+                // Record a frame for the shooter motor.
+                log.motor("flywheel-right")
+                    .voltage(
+                        Units.Volt.of(io.getRightVoltage()))
+                    .angularPosition(Units.Radians.of(io.getRightPosition()))
+                    .angularVelocity(Units.RadiansPerSecond.of(io.getRightVoltage() * 2 * Math.PI / 60));
+        }
+        , this));
 
     boolean spinning = false;
 
@@ -62,11 +100,11 @@ public class Flywheel extends SubsystemBase {
         double leftVel = getLeftVelocity();
         double rightVel = getRightVelocity();
 
-        // double leftOutput = left.calculate(leftVel);
-        // double rightOutput = right.calculate(rightVel);
+        double leftOutput = left.calculate(leftVel) + leftFF.calculate(setpoint);
+        double rightOutput = right.calculate(rightVel) + rightFF.calculate(setpoint);
 
-        double leftOutput = tmpVelocity.get();
-        double rightOutput = tmpVelocity.get();
+        // double leftOutput = tmpVelocity.get();
+        // double rightOutput = tmpVelocity.get();
 
         setLeftVoltage(leftOutput);
         setRightVoltage(rightOutput);
@@ -86,7 +124,8 @@ public class Flywheel extends SubsystemBase {
     }
 
     private double getTargetVelocity() {
-        return velocityMap.get(distance.get());
+        // return velocityMap.get(distance.get());
+        return tmpVelocity.get();
     }
 
     public void start() {

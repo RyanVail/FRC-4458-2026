@@ -53,6 +53,7 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void periodic() {
+        swerveDrive.swerveDrivePoseEstimator.update(getGyroRotation(), swerveDrive.getModulePositions());
     }
 
     @Override

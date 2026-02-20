@@ -40,12 +40,7 @@ public class VisionManager {
         for (int i = 0; i < NUM_CAMERAS; i++) {
             List<PhotonPipelineResult> results = cameras[i].getAllUnreadResults();
             for (PhotonPipelineResult r : results) {
-                Optional<EstimatedRobotPose> pose = switch (VisionConstants.METHOD) {
-                    case COPROC_MULTI_TAG -> pose = estimators[i].estimateCoprocMultiTagPose(r);
-                    case AVERAGE_BEST -> pose = estimators[i].estimateAverageBestTargetsPose(r);
-                    case LEAST_AMBIGUOUS -> pose = estimators[i].estimateLowestAmbiguityPose(r);
-                    case CLOSEST_HEIGHT -> pose = estimators[i].estimateClosestToCameraHeightPose(r);
-                };
+                Optional<EstimatedRobotPose> pose = estimators[i].estimateCoprocMultiTagPose(r);
 
                 if (pose.isPresent()) {
                     poses.add(pose.get());

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.Shoot;
@@ -65,6 +66,15 @@ public class RobotContainer {
 
         configureBindings();
         drive.resetGyroOffset();
+
+        SmartDashboard.putData("LQF", flywheel.left.quasistatic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("LQR", flywheel.left.quasistatic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("LDF", flywheel.left.dynamic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("LDR", flywheel.left.dynamic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("RQF", flywheel.right.quasistatic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("RQR", flywheel.right.quasistatic(SysIdRoutine.Direction.kReverse));
+        SmartDashboard.putData("RDF", flywheel.right.dynamic(SysIdRoutine.Direction.kForward));
+        SmartDashboard.putData("RDR", flywheel.right.dynamic(SysIdRoutine.Direction.kReverse));
     }
 
     private void configureAuto() {

@@ -1,13 +1,14 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.DoubleSupplier;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.InputConstants;
+import frc.robot.DoubleSupplier;
 import frc.robot.subsystems.drive.Drive;
 
 public class TeleopCommand extends Command {
@@ -16,6 +17,9 @@ public class TeleopCommand extends Command {
 
     DoubleSupplier axisControlPow = new DoubleSupplier("AxisControlPow", 3.0);
     DoubleSupplier deadzone = new DoubleSupplier("ControlDeadzone", 0.08);
+
+    SlewRateLimiter xl = new SlewRateLimiter(5);
+    SlewRateLimiter yl = new SlewRateLimiter(5);
 
     private Notifier rumble;
 
@@ -67,7 +71,10 @@ public class TeleopCommand extends Command {
         double y = processAxis(controller.getRawAxis(0));
         double yaw = processAxis(-controller.getRawAxis(4));
 
-        drive.driveGyroRelative(
+        x = xl.calculate(x);
+        y = yl.calculate(y);
+
+        drive.driveRobotRelative(
                 -x * DriveConstants.MAX_SPEED,
                 -y * DriveConstants.MAX_SPEED,
                 yaw * DriveConstants.MAX_SPEED);

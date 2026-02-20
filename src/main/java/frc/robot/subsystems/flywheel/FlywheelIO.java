@@ -7,6 +7,8 @@ public interface FlywheelIO {
     public double getLeftVelocity();
     public double getRightVelocity();
 
+    public double getLeftPosition();
+    public double getRightPosition();
 
     public double getLeftVoltage();
     public double getRightVoltage();

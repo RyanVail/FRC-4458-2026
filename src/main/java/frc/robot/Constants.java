@@ -14,6 +14,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -142,20 +143,21 @@ public final class Constants {
                 double latency_std_dev_ms) {
         };
 
-        public static final Camera CAMERAS[] = {};
+        public static final Camera CAMERAS[] = {
+            new Camera("Camera",
+                new Transform3d(
+                    Units.inchesToMeters(7.5), // 0
+                    Units.inchesToMeters(0), // 7.5
+                    Units.inchesToMeters(28), // 28
+                    new Rotation3d(0, Units.degreesToRadians(-31), 0)),
+                0,
+                0,
+                Rotation2d.kZero,
+                0,
+                0,
+                0)
+        };
         public static final double MAX_SECONDS = 0.8;
-
-        /**
-         * The method to use when estimating a pose from april tags.
-         */
-        public static final Method METHOD = Method.AVERAGE_BEST;
-
-        public enum Method {
-            COPROC_MULTI_TAG,
-            AVERAGE_BEST,
-            LEAST_AMBIGUOUS,
-            CLOSEST_HEIGHT,
-        }
     }
 
     public static final class FieldConstants {
@@ -204,7 +206,11 @@ public final class Constants {
 
         public static final double[][] VEL_MAP = {
                 { 0.0, 0.0 },
-                { 5.0, 3000.0 }
+                { 1.1, 2800.0 },
+                { 1.5, 3200.0 },
+                { 2.0, 3300.0 },
+                { 2.5, 3500.0 },
+                { 3.0, 3500.0 }
         };
     }
 
@@ -224,7 +230,7 @@ public final class Constants {
 
         public static final double[][] POS_MAP = {
                 { 0.0, 0.0 },
-                { 0.0, 100.0 }
+                { 3.0, 25.0 }
         };
     }
 

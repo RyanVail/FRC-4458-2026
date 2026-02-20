@@ -35,6 +35,16 @@ public class FlywheelIOSpark implements FlywheelIO {
     }
 
     @Override
+    public double getLeftPosition() {
+        return leftSpark.getEncoder().getPosition();
+    }
+
+    @Override
+    public double getRightPosition() {
+        return rightSpark.getEncoder().getPosition();
+    }
+
+    @Override
     public double getLeftVoltage() {
         return leftSpark.getBusVoltage();
     }
