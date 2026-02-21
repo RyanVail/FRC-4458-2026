@@ -5,13 +5,10 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
-import org.photonvision.targeting.PnpResult;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.util.FlippingUtil;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -46,18 +43,12 @@ public class Drive extends SubsystemBase {
     private boolean targetLock = false;
     private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(0));
     private double targetLockRadians = 0.0;
-    Translation2d goalCenter;
 
     public Drive(DriveIO io) {
         this.io = io;
         this.io.resetPose(new Pose2d(new Translation2d(1.0, 1.0), new Rotation2d()));
 
         targetPID.get().enableContinuousInput(0, 2 * Math.PI);
-        
-        AprilTagFieldLayout field = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
-
-        goalCenter = field.getTagPose(10).get().toPose2d().getTranslation().plus((field.getTagPose(4).get().toPose2d().getTranslation())).div(2);
-        Logger.recordOutput(LPREFIX + "Goal", new Pose2d(goalCenter, Rotation2d.kZero));
     }
 
     @Override
@@ -90,9 +81,6 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput(LPREFIX + "targetRot", targetRot);
         Logger.recordOutput(LPREFIX + "targetLock", targetLock);
-
-        Logger.recordOutput(LPREFIX + "goalDistance", io.getPose().getTranslation().getDistance(goalCenter));
-
     }
 
     /**

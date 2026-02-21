@@ -12,7 +12,6 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -158,19 +157,33 @@ public final class Constants {
                 0)
         };
         public static final double MAX_SECONDS = 0.8;
+
+        /**
+         * The method to use when estimating a pose from april tags.
+         */
+        public static final Method METHOD = Method.COPROC_MULTI_TAG;
+
+        public enum Method {
+            COPROC_MULTI_TAG,
+            AVERAGE_BEST,
+            LEAST_AMBIGUOUS,
+            CLOSEST_HEIGHT,
+        }
     }
 
     public static final class FieldConstants {
         public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
-                .loadField(AprilTagFields.k2025ReefscapeWelded);
+                .loadField(AprilTagFields.k2026RebuiltWelded);
 
-        private static final Translation2d target = new Translation2d(4.5, 4.1);
+        private static final Translation2d TARGET = LAYOUT.getTagPose(10).get().toPose2d().getTranslation().plus((
+            LAYOUT.getTagPose(4).get().toPose2d().getTranslation()
+        )).div(2);
 
         public static final Translation2d getTarget() {
-            if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
-                return target;
+            if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
+                return TARGET;
             } else {
-                return FlippingUtil.flipFieldPosition(target);
+                return FlippingUtil.flipFieldPosition(TARGET);
             }
         }
     }
