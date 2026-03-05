@@ -18,8 +18,8 @@ public class TeleopCommand extends Command {
     DoubleSupplier axisControlPow = new DoubleSupplier("AxisControlPow", 3.0);
     DoubleSupplier deadzone = new DoubleSupplier("ControlDeadzone", 0.08);
 
-    SlewRateLimiter xl = new SlewRateLimiter(5);
-    SlewRateLimiter yl = new SlewRateLimiter(5);
+    SlewRateLimiter xl = new SlewRateLimiter(2.5);
+    SlewRateLimiter yl = new SlewRateLimiter(2.5);
 
     private Notifier rumble;
 
@@ -74,10 +74,10 @@ public class TeleopCommand extends Command {
         x = xl.calculate(x);
         y = yl.calculate(y);
 
-        drive.driveRobotRelative(
+        drive.driveGyroRelative(
                 -x * DriveConstants.MAX_SPEED,
                 -y * DriveConstants.MAX_SPEED,
-                yaw * DriveConstants.MAX_SPEED);
+                yaw *2* DriveConstants.MAX_SPEED);
     }
 
     @Override
