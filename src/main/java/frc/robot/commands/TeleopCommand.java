@@ -77,7 +77,7 @@ public class TeleopCommand extends Command {
         drive.driveGyroRelative(
                 -x * DriveConstants.MAX_SPEED,
                 -y * DriveConstants.MAX_SPEED,
-                yaw *2* DriveConstants.MAX_SPEED);
+                yaw * DriveConstants.MAX_TURN_SPEED);
     }
 
     @Override

@@ -106,6 +106,7 @@ public final class Constants {
 
     public static final class DriveConstants {
         public static final double MAX_SPEED = Units.feetToMeters(14.5);
+        public static final double MAX_TURN_SPEED = 4.4196;
         public static final double DEADZONE = 0.08;
 
         public static final PPHolonomicDriveController PPDriveController = new PPHolonomicDriveController(
