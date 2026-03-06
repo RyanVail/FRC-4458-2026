@@ -180,7 +180,10 @@ public final class Constants {
             LAYOUT.getTagPose(4).get().toPose2d().getTranslation()
         )).div(2);
 
-        public static final Translation2d getTarget() {
+        /**
+         * Gets the target hub position auto flipped based on team.
+         */
+        public static final Translation2d getHubPos() {
             if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
                 return TARGET;
             } else {

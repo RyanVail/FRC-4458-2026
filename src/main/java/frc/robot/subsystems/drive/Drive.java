@@ -35,12 +35,18 @@ public class Drive extends SubsystemBase {
         }
     }
 
+    public enum TargetLock {
+        None,
+        Hub,
+        Fuel,
+    }
+
     public static final String LPREFIX = "/Subsystems/Drive/";
 
     private DriveIO io;
     private Rotation2d gyroOffset;
 
-    private boolean targetLock = false;
+    private TargetLock targetLock = TargetLock.None;
     private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(0));
     private double targetLockRadians = 0.0;
 
@@ -53,8 +59,9 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Logger.recordOutput(LPREFIX + "Pose", io.getPose());
-        Logger.recordOutput(LPREFIX + "FlippedPose", FlippingUtil.flipFieldPose(io.getPose()));
+        Pose2d pose = getPose();
+        Logger.recordOutput(LPREFIX + "Pose", pose);
+        Logger.recordOutput(LPREFIX + "FlippedPose", FlippingUtil.flipFieldPose(pose));
         Logger.recordOutput(LPREFIX + "SwerveStates", io.getSwerveStates());
 
         io.periodic();
@@ -69,18 +76,23 @@ public class Drive extends SubsystemBase {
 
         io.addVisionEstimations(poses);
 
-        Pose2d pose = getPose();
-        Translation2d diff = FieldConstants.getTarget().minus(pose.getTranslation());
-        Rotation2d targetRot = diff.getAngle();
-
-        PIDController pid = targetPID.get();
-        if (targetLock) {
+        Rotation2d targetRot = getTargetRot();
+        if (targetRot != null) {
+            PIDController pid = targetPID.get();
             pid.setSetpoint(targetRot.getRadians());
             targetLockRadians = pid.calculate(pose.getRotation().getRadians());
         }
 
         Logger.recordOutput(LPREFIX + "targetRot", targetRot);
         Logger.recordOutput(LPREFIX + "targetLock", targetLock);
+    }
+
+    private Rotation2d getTargetRot() {
+        Pose2d pose = getPose();
+        return switch (targetLock) {
+            case Hub -> FieldConstants.getHubPos().minus(pose.getTranslation()).getAngle();
+            default -> null;
+        };
     }
 
     /**
@@ -111,7 +123,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
-        if (targetLock) {
+        if (targetLock != TargetLock.None) {
             speeds.omegaRadiansPerSecond = targetLockRadians;
         }
 
@@ -154,23 +166,24 @@ public class Drive extends SubsystemBase {
         this.driveRobotRelative(new ChassisSpeeds());
     }
 
-    public void toggleTargetLock() {
-        if (targetLock) {
-            unlockOnTarget();
+    public TargetLock getTargetLock() {
+        return targetLock;
+    }
+
+    public void toggleTargetLock(TargetLock lock) {
+        if (targetLock != lock) {
+            setTargetLock(lock);
         } else {
-            lockOnTarget();
+            setTargetLock(TargetLock.None);
         }
     }
 
-    public void lockOnTarget() {
-        if (!targetLock) {
-            targetPID.get().reset();
+    public void setTargetLock(TargetLock lock) {
+        if (targetLock == lock) {
+            return;
         }
 
-        targetLock = true;
-    }
-
-    public void unlockOnTarget() {
-        targetLock = false;
+        targetPID.get().reset();
+        targetLock = lock;
     }
 }

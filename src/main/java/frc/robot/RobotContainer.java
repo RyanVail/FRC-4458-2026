@@ -15,6 +15,7 @@ import frc.robot.Constants.InputConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
+import frc.robot.subsystems.drive.Drive.TargetLock;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
@@ -47,7 +48,7 @@ public class RobotContainer {
         }
 
         Supplier<Double> shoot_distance = () -> drive.getPose().getTranslation().getDistance(
-                FieldConstants.getTarget());
+                FieldConstants.getHubPos());
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
@@ -108,7 +109,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "ToggleTargetLock",
-                Commands.run(() -> drive.toggleTargetLock()));
+                Commands.run(() -> drive.toggleTargetLock(TargetLock.Hub)));
 
         NamedCommands.registerCommand("Shoot", new Shoot(flywheel, hopper));
 
@@ -154,7 +155,7 @@ public class RobotContainer {
         }));
 
         operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
-            drive.toggleTargetLock();
+            drive.toggleTargetLock(TargetLock.Hub);
         }));
 
         operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
