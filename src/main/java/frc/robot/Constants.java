@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignPose;
 import frc.robot.control.BetterTrapezoidProfile;
@@ -77,7 +78,9 @@ public final class Constants {
     }
 
     public static final void constructEntries() {
-        Commands.print("writing to " + Filesystem.getDeployDirectory().toPath().toString()).schedule();
+        CommandScheduler.getInstance().schedule(Commands.print(
+                "writing to " + Filesystem.getDeployDirectory().toPath().toString()));
+
         File file = new File(Filesystem.getDeployDirectory() + "/constants.json");
         ObjectMapper mapper = new ObjectMapper();
         updateConstants();
@@ -144,18 +147,18 @@ public final class Constants {
         };
 
         public static final Camera CAMERAS[] = {
-            new Camera("Camera",
-                new Transform3d(
-                    Units.inchesToMeters(7.5), // 0
-                    Units.inchesToMeters(0), // 7.5
-                    Units.inchesToMeters(28), // 28
-                    new Rotation3d(0, Units.degreesToRadians(-31), 0)),
-                0,
-                0,
-                Rotation2d.kZero,
-                0,
-                0,
-                0)
+                new Camera("Camera",
+                        new Transform3d(
+                                Units.inchesToMeters(7.5), // 0
+                                Units.inchesToMeters(0), // 7.5
+                                Units.inchesToMeters(28), // 28
+                                new Rotation3d(0, Units.degreesToRadians(-31), 0)),
+                        0,
+                        0,
+                        Rotation2d.kZero,
+                        0,
+                        0,
+                        0)
         };
         public static final double MAX_SECONDS = 0.8;
 
@@ -176,9 +179,8 @@ public final class Constants {
         public static final AprilTagFieldLayout LAYOUT = AprilTagFieldLayout
                 .loadField(AprilTagFields.k2026RebuiltWelded);
 
-        private static final Translation2d TARGET = LAYOUT.getTagPose(10).get().toPose2d().getTranslation().plus((
-            LAYOUT.getTagPose(4).get().toPose2d().getTranslation()
-        )).div(2);
+        private static final Translation2d TARGET = LAYOUT.getTagPose(10).get().toPose2d().getTranslation()
+                .plus((LAYOUT.getTagPose(4).get().toPose2d().getTranslation())).div(2);
 
         /**
          * Gets the target hub position auto flipped based on team.
@@ -236,7 +238,7 @@ public final class Constants {
         public static final int RIGHT_CHANNEL = 5;
 
         /**
-         * The max length of the servo in mm. 
+         * The max length of the servo in mm.
          */
         public static final double LENGTH = 100.0;
 

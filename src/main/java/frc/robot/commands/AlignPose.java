@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.PIDSupplier;
@@ -96,7 +97,10 @@ public class AlignPose extends Command {
         Logger.recordOutput("AligningTo", target.pose);
 
         if (!withinStartingDistance(start, target.pose)) {
-            Commands.print("Auto align dist too far. Start: " + start + " target: " + this.target.pose).schedule();
+            CommandScheduler.getInstance().schedule(Commands.print(
+                "Auto align dist too far. Start: " + start + " target:" + this.target.pose
+            ));
+
             this.target = null;
             super.cancel();
             return;
@@ -110,8 +114,8 @@ public class AlignPose extends Command {
 
         xPID.get().reset();
         yPID.get().reset();
-        anglePID.get().reset();
 
+        anglePID.get().reset();
         anglePID.get().setSetpoint(target.pose.getRotation().getRadians());
         anglePID.get().setTolerance(target.constraints.rot_dist);
     }

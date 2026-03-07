@@ -7,6 +7,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
 
@@ -56,8 +57,9 @@ public class AutoManager {
         AutoManager.inited = true;
 
         AutoManager.auto = chooser.getSelected();
-        if (AutoManager.auto != null)
-            AutoManager.auto.schedule();
+        if (AutoManager.auto != null) {
+            CommandScheduler.getInstance().schedule(AutoManager.auto);
+        }
     }
 
     public static void cancel() {
