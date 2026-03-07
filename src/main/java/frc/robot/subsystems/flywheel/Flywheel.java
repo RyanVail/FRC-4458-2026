@@ -9,10 +9,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.Constants.FlyWheelConstants;
@@ -32,36 +29,6 @@ public class Flywheel extends SubsystemBase {
      * Supplies the distance from the robot to the target.
      */
     Supplier<Double> distance;
-
-    public SysIdRoutine left = new SysIdRoutine(
-        new SysIdRoutine.Config(),
-        new SysIdRoutine.Mechanism((Voltage v) -> {
-            io.setLeftVoltage(v.magnitude());
-        },
-        log -> {
-                // Record a frame for the shooter motor.
-                log.motor("flywheel-left")
-                    .voltage(
-                        Units.Volt.of(io.getLeftVoltage()))
-                    .angularPosition(Units.Radians.of(io.getLeftPosition()))
-                    .angularVelocity(Units.RadiansPerSecond.of(io.getLeftVelocity() * 2 * Math.PI / 60));
-        }
-        , this));
-
-    public SysIdRoutine right = new SysIdRoutine(
-        new SysIdRoutine.Config(),
-        new SysIdRoutine.Mechanism((Voltage v) -> {
-            io.setRightVoltage(v.magnitude());
-        },
-        log -> {
-                // Record a frame for the shooter motor.
-                log.motor("flywheel-right")
-                    .voltage(
-                        Units.Volt.of(io.getRightVoltage()))
-                    .angularPosition(Units.Radians.of(io.getRightPosition()))
-                    .angularVelocity(Units.RadiansPerSecond.of(io.getRightVoltage() * 2 * Math.PI / 60));
-        }
-        , this));
 
     boolean spinning = false;
 
