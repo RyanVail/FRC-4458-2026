@@ -102,9 +102,6 @@ public class Flywheel extends SubsystemBase {
         double leftOutput = left.calculate(leftVel) + leftFF.calculate(setpoint);
         double rightOutput = right.calculate(rightVel) + rightFF.calculate(setpoint);
 
-        // double leftOutput = tmpVelocity.get();
-        // double rightOutput = tmpVelocity.get();
-
         setLeftVoltage(leftOutput);
         setRightVoltage(rightOutput);
         io.simulationPeriodic();
