@@ -23,5 +23,14 @@
     "drive": true,
     "angle": false
   },
+  "conversionFactors": {
+    "angle": {
+      "gearRatio": 12.8
+    },
+    "drive": {
+      "diameter": 4.0,
+      "gearRatio": 8.14
+    }
+  },
   "absoluteEncoderInverted": false
 }
