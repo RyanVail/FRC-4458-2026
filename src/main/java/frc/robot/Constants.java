@@ -147,18 +147,18 @@ public final class Constants {
         };
 
         public static final Camera CAMERAS[] = {
-                new Camera("Camera",
+                new Camera("Front",
                         new Transform3d(
-                                Units.inchesToMeters(7.5), // 0
-                                Units.inchesToMeters(0), // 7.5
-                                Units.inchesToMeters(28), // 28
-                                new Rotation3d(0, Units.degreesToRadians(-31), 0)),
+                                Units.inchesToMeters(8.0), // 0
+                                Units.inchesToMeters(0.0), // 7.5
+                                Units.inchesToMeters(26), // 28
+                                new Rotation3d(0, Units.degreesToRadians(-55), 0)),
                         0,
                         0,
                         Rotation2d.kZero,
                         0,
                         0,
-                        0)
+                        0)  
         };
         public static final double MAX_SECONDS = 0.8;
 
@@ -201,19 +201,6 @@ public final class Constants {
          * The port of the motor that controls the rotation of the intake.
          */
         public static final int ROT_PORT = 8;
-
-        /**
-         * The rotation motor's position when the robot starts.
-         * 
-         * Should be kept zero because it's relative and the intake is always started
-         * up.
-         */
-        public static final double ROT_UP_POS = 0.0;
-
-        /**
-         * The rotation motor's position when in the down position.
-         */
-        public static final double ROT_DOWN_POS = 1.0;
     }
 
     public static final class FlyWheelConstants {
@@ -224,12 +211,7 @@ public final class Constants {
         public static final double[] STD_DEVS = { 0.0 };
 
         public static final double[][] VEL_MAP = {
-                { 0.0, 0.0 },
-                { 1.1, 2800.0 },
-                { 1.5, 3200.0 },
-                { 2.0, 3300.0 },
-                { 2.5, 3500.0 },
-                { 3.0, 3500.0 }
+                { 3.4, 3400.0 }
         };
     }
 
@@ -249,7 +231,7 @@ public final class Constants {
 
         public static final double[][] POS_MAP = {
                 { 0.0, 0.0 },
-                { 3.0, 25.0 }
+                { 3.4, 50.0 }
         };
     }
 

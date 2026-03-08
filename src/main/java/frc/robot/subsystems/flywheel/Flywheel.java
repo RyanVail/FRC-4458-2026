@@ -8,6 +8,7 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DoubleSupplier;
@@ -22,6 +23,9 @@ public class Flywheel extends SubsystemBase {
 
     SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(0, 0.00215);
     SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(0, 0.00215);
+
+    SlewRateLimiter leftSlew = new SlewRateLimiter(6.0);
+    SlewRateLimiter rightSlew = new SlewRateLimiter(6.0);
 
     double setpoint = 0.0;
 
@@ -69,6 +73,9 @@ public class Flywheel extends SubsystemBase {
         double leftOutput = left.calculate(leftVel) + leftFF.calculate(setpoint);
         double rightOutput = right.calculate(rightVel) + rightFF.calculate(setpoint);
 
+        leftOutput = leftSlew.calculate(leftOutput);
+        rightOutput = rightSlew.calculate(rightOutput);
+
         setLeftVoltage(leftOutput);
         setRightVoltage(rightOutput);
         io.simulationPeriodic();
@@ -78,11 +85,9 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
 
         Logger.recordOutput(LPREFIX + "LeftVelocity", leftVel);
-        Logger.recordOutput(LPREFIX + "LeftVoltage", getLeftVoltage());
         Logger.recordOutput(LPREFIX + "LeftOutput", leftOutput);
 
         Logger.recordOutput(LPREFIX + "RightVelocity", rightVel);
-        Logger.recordOutput(LPREFIX + "RightVoltage", getRightVoltage());
         Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
     }
 

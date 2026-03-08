@@ -1,16 +1,17 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeIOSpark implements IntakeIO {
-    SparkMax spark;
+    SparkFlex spark;
     SparkMax rotSpark;
 
     public IntakeIOSpark() {
-        spark = new SparkMax(IntakeConstants.PORT, MotorType.kBrushless);
+        spark = new SparkFlex(IntakeConstants.PORT, MotorType.kBrushless);
         rotSpark = new SparkMax(IntakeConstants.ROT_PORT, MotorType.kBrushless);
     }
 
@@ -26,6 +27,10 @@ public class IntakeIOSpark implements IntakeIO {
 
     public double getRotPosition() {
         return rotSpark.getEncoder().getPosition();
+    }
+
+    public double getRotVelocity() {
+        return rotSpark.getEncoder().getVelocity();
     }
 
     @Override

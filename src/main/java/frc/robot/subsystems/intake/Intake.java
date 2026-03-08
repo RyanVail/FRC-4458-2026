@@ -4,18 +4,36 @@ import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
-import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
     IntakeIO io;
 
-    PIDSupplier rotPID = new PIDSupplier(LPREFIX + "rotPID", new PIDConstants(0.0));
-    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 2.0);
+    PIDSupplier rotPID = new PIDSupplier(LPREFIX + "rotPID", new PIDConstants(0.05));
+    ArmFeedforward rotFF = new ArmFeedforward(0.00002, 0.000185, 0.00002);
+    TrapezoidProfile rotProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(
+        20.0,
+        5.0
+    ));
 
+    DoubleSupplier rotUpPos = new DoubleSupplier(LPREFIX + "rotUpPos", 0.0);
+    DoubleSupplier rotDownPos = new DoubleSupplier(LPREFIX + "rotDownPos", 80.0);
+    DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "Ossilate", 20.0);
+
+    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 2.0);
+    DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 2.0);
+
+    double rotSetpoint;
     boolean spinning = false;
+    boolean shooting = false;
+    boolean down = false;
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 
@@ -28,15 +46,47 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Velocity", getVelocity());
         Logger.recordOutput(LPREFIX + "Voltage", getVoltage());
 
-        double rotOutput = rotPID.get().calculate(getRotPosition());
+        double rotPosition = getRotPosition();
+        double rotVelocity = getRotVelocity();
+
+        TrapezoidProfile.State state = rotProfile.calculate(
+            Constants.LOOP_TIME,
+            new TrapezoidProfile.State(rotPosition, rotVelocity),
+            new TrapezoidProfile.State(rotSetpoint, 0.0)
+        );
+
+        if (shooting) {
+            double x = (Math.sin(Timer.getFPGATimestamp() * 9.0) + 1.0) * 0.5;
+            rotSetpoint = rotDownPos.get() - (x * ossilateScale.get());
+        } else if (down) {
+            rotSetpoint = rotDownPos.get();
+        } else {
+            rotSetpoint = rotUpPos.get();
+        }
+
+        rotPID.get().setSetpoint(rotSetpoint);
+        double rotOutput = rotPID.get().calculate(rotPosition);
+
+        rotOutput += rotFF.calculate(
+            Units.degreesToRadians(rotPosition - 90.0),
+            state.velocity
+        );
+
         io.setRotVoltage(rotOutput);
 
-        Logger.recordOutput(LPREFIX + "RotPosition", getRotPosition());
+        Logger.recordOutput(LPREFIX + "RotSetpoint", rotSetpoint);
+        Logger.recordOutput(LPREFIX + "RotPosition", rotPosition);
         Logger.recordOutput(LPREFIX + "RotOutput", rotOutput);
-    
+ 
+        double targetVoltage = 0.0;
         if (spinning) {
-            setVoltage(spinning ? voltage.get() : 0.0);
+            targetVoltage = voltage.get();
+        } else if (shooting) {
+            targetVoltage = shootingVoltage.get();
         }
+
+        Logger.recordOutput(LPREFIX + "TargetVoltage", targetVoltage);
+        setVoltage(targetVoltage);
 
         io.simulationPeriodic();
     }
@@ -50,11 +100,27 @@ public class Intake extends SubsystemBase {
     }
 
     public void moveDown() {
-        rotPID.get().setSetpoint(IntakeConstants.ROT_DOWN_POS);
+        down = true;
     }
 
     public void moveUp() {
-        rotPID.get().setSetpoint(IntakeConstants.ROT_UP_POS);
+        down = false;
+    }
+
+    public void startShooting() {
+        shooting = true;
+    }
+
+    public void stopShooting() {
+        shooting = false;
+    }
+
+    public void toggleDown() {
+        if (down) {
+            moveUp();
+        } else {
+            moveDown();
+        }
     }
 
     public void setVoltage(double voltage) {
@@ -75,5 +141,9 @@ public class Intake extends SubsystemBase {
 
     public double getRotPosition() {
         return io.getRotPosition();
+    }
+
+    public double getRotVelocity() {
+        return io.getRotVelocity();
     }
 }

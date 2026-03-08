@@ -138,10 +138,12 @@ public class RobotContainer {
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             hopper.start();
+            intake.startShooting();
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             hopper.stop();
+            intake.stopShooting();
         }));
 
         operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
@@ -154,6 +156,10 @@ public class RobotContainer {
 
         operatorHID.button(XboxController.Button.kB.value).onFalse(Commands.runOnce(() -> {
             intake.stop();
+        }));
+
+        driverHID.button(XboxController.Button.kRightBumper.value).onTrue(Commands.runOnce(() -> {
+            intake.toggleDown();
         }));
 
         drive.setDefaultCommand(

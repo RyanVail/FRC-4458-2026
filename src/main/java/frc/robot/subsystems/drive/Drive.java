@@ -47,7 +47,7 @@ public class Drive extends SubsystemBase {
     private Rotation2d gyroOffset;
 
     private TargetLock targetLock = TargetLock.None;
-    private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(0));
+    private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(8.0));
     private double targetLockRadians = 0.0;
 
     public Drive(DriveIO io) {

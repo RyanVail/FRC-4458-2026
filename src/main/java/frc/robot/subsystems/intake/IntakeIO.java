@@ -13,5 +13,7 @@ public interface IntakeIO {
 
     public double getPosition();
 
+    public double getRotVelocity();
+
     public default void simulationPeriodic() {}
 }

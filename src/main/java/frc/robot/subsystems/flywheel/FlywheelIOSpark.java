@@ -1,17 +1,17 @@
 package frc.robot.subsystems.flywheel;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Constants.FlyWheelConstants;
 
 public class FlywheelIOSpark implements FlywheelIO {
-    SparkMax leftSpark;
-    SparkMax rightSpark;
+    SparkFlex leftSpark;
+    SparkFlex rightSpark;
 
     public FlywheelIOSpark() {
-        leftSpark = new SparkMax(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
-        rightSpark = new SparkMax(FlyWheelConstants.RIGHT_PORT, MotorType.kBrushless);
+        leftSpark = new SparkFlex(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
+        rightSpark = new SparkFlex(FlyWheelConstants.RIGHT_PORT, MotorType.kBrushless);
     }
 
     @Override
