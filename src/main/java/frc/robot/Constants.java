@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -87,7 +88,7 @@ public final class Constants {
                         0)
         };
         public static final double MAX_SECONDS = 0.8;
- 
+
         /**
          * The method to use when estimating a pose from april tags.
          */
@@ -118,6 +119,19 @@ public final class Constants {
                 return FlippingUtil.flipFieldPosition(TARGET);
             }
         }
+
+        private static final double[][] TIME_MAP_DATA = {
+            { 0.0, 1.0 },
+            { 1.0, 4.0 },
+            { 2.0, 7.0 },
+        };
+
+        public static final InterpolatingDoubleTreeMap TIME_MAP = new InterpolatingDoubleTreeMap();
+        static {
+            for (double[] entry : TIME_MAP_DATA) {
+                TIME_MAP.put(entry[0], entry[1]);
+            }
+        }
     }
 
     public static final class IntakeConstants {
@@ -137,7 +151,7 @@ public final class Constants {
         public static final double[] STD_DEVS = { 0.0 };
 
         public static final double[][] VEL_MAP = {
-                { 3.4, 3400.0 }
+                { 3.4, 3400.0 },
         };
 
         public static final double P = 0.005;
@@ -160,7 +174,7 @@ public final class Constants {
 
         public static final double[][] POS_MAP = {
                 { 0.0, 0.0 },
-                { 3.4, 50.0 }
+                { 3.4, 50.0 },
         };
     }
 

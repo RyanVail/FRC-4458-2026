@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.VisionManager;
 import frc.robot.Constants.FieldConstants;
@@ -49,6 +50,8 @@ public class Drive extends SubsystemBase {
     private TargetLock targetLock = TargetLock.None;
     private PIDSupplier targetPID = new PIDSupplier(LPREFIX + "targetPID", new PIDConstants(8.0));
     private double targetLockRadians = 0.0;
+
+    private DoubleSupplier shootTimeLatency = new DoubleSupplier(LPREFIX + "shootTimeLatency", 0.02);
 
     public Drive(DriveIO io) {
         this.io = io;
@@ -87,10 +90,27 @@ public class Drive extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "targetLock", targetLock);
     }
 
+    /**
+     * Gets the position to target when shooting at the hub.
+     */
+    private Translation2d getHubTarget() {
+        Pose2d pose = getPose();
+        ChassisSpeeds speeds = getFieldVelocity();
+
+        Translation2d hub_pos = FieldConstants.getHubPos();
+
+        // The time the fuel spends in the air.
+        double time = FieldConstants.TIME_MAP.get(pose.getTranslation().getDistance(hub_pos));
+        time += shootTimeLatency.get();
+
+        Translation2d vel = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        return hub_pos.minus(vel.times(time));
+    }
+
     private Rotation2d getTargetRot() {
         Pose2d pose = getPose();
         return switch (targetLock) {
-            case Hub -> FieldConstants.getHubPos().minus(pose.getTranslation()).getAngle();
+            case Hub -> getHubTarget().minus(pose.getTranslation()).getAngle();
             default -> null;
         };
     }
@@ -143,7 +163,7 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveVisionRelative(ChassisSpeeds speeds) {
-        this.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, this.getPose().getRotation()));
+        this.driveRobotRelative(ChassisSpeeds.fromRobotRelativeSpeeds(speeds, this.getPose().getRotation()));
     }
 
     public void setGryoOffset(Rotation2d rotation) {
@@ -160,6 +180,10 @@ public class Drive extends SubsystemBase {
 
     public ChassisSpeeds getRobotVelocity() {
         return io.getRobotVelocity();
+    }
+
+    public ChassisSpeeds getFieldVelocity() {
+        return io.getFieldVelocity();
     }
 
     public void stop() {
