@@ -35,11 +35,11 @@ public class NetworkSparkFlexConfig {
     }
 
     public void broadcast() {
-        Preferences.initDouble(key + ".ampLimit", config.ampLimit);
-        Preferences.initDouble(key + ".pid.p", config.p);
-        Preferences.initDouble(key + ".pid.i", config.i);
-        Preferences.initDouble(key + ".pid.d", config.d);
-        Preferences.initDouble(key + ".ff.k", config.ffK);
+        Preferences.setDouble(key + "ampLimit", config.ampLimit);
+        Preferences.setDouble(key + "pid.p", config.p);
+        Preferences.setDouble(key + "pid.i", config.i);
+        Preferences.setDouble(key + "pid.d", config.d);
+        Preferences.setDouble(key + "ff.k", config.ffK);
     }
 
     /**
@@ -50,23 +50,23 @@ public class NetworkSparkFlexConfig {
     private boolean gather() {
         boolean dirty = false;
 
-        double p = Preferences.getDouble(key + ".pid.p", config.p);
+        double p = Preferences.getDouble(key + "pid.p", config.p);
         dirty |= (p != config.p);
         config.p = p;
 
-        double i = Preferences.getDouble(key + ".pid.i", config.i);
+        double i = Preferences.getDouble(key + "pid.i", config.i);
         dirty |= (i != config.i);
         config.i = i;
 
-        double d = Preferences.getDouble(key + ".pid.d", config.d);
+        double d = Preferences.getDouble(key + "pid.d", config.d);
         dirty |= (d != config.d);
         config.d = d;
 
-        double ampLimit = Preferences.getDouble(key + ".ampLimit", config.ampLimit);
+        double ampLimit = Preferences.getDouble(key + "ampLimit", config.ampLimit);
         dirty |= (ampLimit != config.ampLimit);
         config.ampLimit = ampLimit;
 
-        double ffK = Preferences.getDouble(key + ".ff.k", config.ffK);
+        double ffK = Preferences.getDouble(key + "ff.k", config.ffK);
         dirty |= (ffK != config.ffK);
         config.ffK = ffK;
 
