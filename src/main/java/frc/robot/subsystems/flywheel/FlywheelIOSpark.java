@@ -1,37 +1,45 @@
 package frc.robot.subsystems.flywheel;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 
+import frc.robot.NetworkSparkFlexConfig;
 import frc.robot.Constants.FlyWheelConstants;
+import frc.robot.NetworkSparkFlexConfig.Config;
 
 public class FlywheelIOSpark implements FlywheelIO {
     SparkFlex leftSpark;
     SparkFlex rightSpark;
 
+    NetworkSparkFlexConfig leftNetworkConfig;
+    NetworkSparkFlexConfig rightNetworkConfig;
+
     public FlywheelIOSpark() {
         leftSpark = new SparkFlex(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
         rightSpark = new SparkFlex(FlyWheelConstants.RIGHT_PORT, MotorType.kBrushless);
 
-        SparkFlexConfig config = new SparkFlexConfig();
-        config.closedLoop.pid(FlyWheelConstants.P, 0.0, 0.0);
-        config.closedLoop.feedForward.kV(FlyWheelConstants.FF_V);
+        Config config = new Config();
+        config.p = 0.005;
+        config.ffK = 0.02;
 
-        leftSpark.configure(
-            config,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
+        leftNetworkConfig = new NetworkSparkFlexConfig(
+            Flywheel.LPREFIX + "left/",
+            leftSpark,
+            config
         );
 
-        rightSpark.configure(
-            config,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
+        rightNetworkConfig = new NetworkSparkFlexConfig(
+            Flywheel.LPREFIX + "right/",
+            rightSpark,
+            config
         );
+    }
+
+    @Override
+    public void periodic() {
+        leftNetworkConfig.update();
+        rightNetworkConfig.update();
     }
 
     @Override

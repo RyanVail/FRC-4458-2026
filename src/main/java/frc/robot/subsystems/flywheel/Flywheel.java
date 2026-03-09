@@ -28,7 +28,7 @@ public class Flywheel extends SubsystemBase {
 
     DoubleSupplier tmpVelocity = new DoubleSupplier(LPREFIX + "tmpVelocity", 0.0);
 
-    private static final String LPREFIX = "/Subsystems/Flywheel/";
+    public static final String LPREFIX = "/Subsystems/Flywheel/";
 
     public Flywheel(FlywheelIO io, Supplier<Double> distance) {
         this.io = io;
@@ -42,6 +42,8 @@ public class Flywheel extends SubsystemBase {
         double setpoint = spinning ? target : 0.0;
         io.setLeftVelocitySetpoint(setpoint);
         io.setRightVelocitySetpoint(setpoint);
+
+        io.periodic();
         io.simulationPeriodic();
 
         Logger.recordOutput(LPREFIX + "Target", target);
