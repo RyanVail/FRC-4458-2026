@@ -1,9 +1,7 @@
 package frc.robot.control;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Timer;
 
 public class LinearServo extends Servo {
     double speed;
@@ -24,11 +22,12 @@ public class LinearServo extends Servo {
         this.length = length;
         this.speed = speed;
         setBoundsMicroseconds(
-                (int) Units.secondsToMilliseconds(2.0),
-                (int) Units.secondsToMilliseconds(1.8),
-                (int) Units.secondsToMilliseconds(1.5),
-                (int) Units.secondsToMilliseconds(1.2),
-                (int) Units.secondsToMilliseconds(1.0));
+            2_000_000,
+            1_800_000,
+            1_500_000,
+            1_200_000,
+            1_000_000
+        );
     }
 
     /**
@@ -36,27 +35,7 @@ public class LinearServo extends Servo {
      */
     public void setSetpoint(double setpoint) {
         targetPos = MathUtil.clamp(setpoint, 0, length);
-        setSpeed((targetPos / length * 2) - 1);
-    }
-
-    double lastTime = 0;
-
-    public void update() {
-        double dt = Timer.getFPGATimestamp() - lastTime;
-        if (pos > targetPos + speed * dt) {
-            pos -= speed * dt;
-        } else if (pos < targetPos - speed * dt) {
-            pos += speed * dt;
-        } else {
-            pos = targetPos;
-        }
-    }
-
-    /**
-     * Gets the position of this servo in mm.
-     */
-    public double getPosition() {
-        return pos;
+        setPosition(targetPos / length);
     }
 
     /**

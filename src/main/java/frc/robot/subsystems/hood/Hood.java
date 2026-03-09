@@ -27,7 +27,7 @@ public class Hood extends SubsystemBase {
 
     DoubleSupplier tmpSetpoint = new DoubleSupplier("tmpSetpoint", 0.0);
 
-    private static final String LPREFIX = "/Subsystems/Hood/";
+    public static final String LPREFIX = "/Subsystems/Hood/";
 
     public Hood(HoodIO io, Supplier<Double> distance) {
         this.io = io;

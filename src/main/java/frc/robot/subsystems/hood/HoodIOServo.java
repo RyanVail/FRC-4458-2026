@@ -1,13 +1,15 @@
 package frc.robot.subsystems.hood;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.robot.Constants.HoodConstants;
 import frc.robot.control.LinearServo;
 
-public class HoodIOSpark implements HoodIO {
+public class HoodIOServo implements HoodIO {
     LinearServo leftServo;
     LinearServo rightServo;
 
-    public HoodIOSpark() {
+    public HoodIOServo() {
         leftServo = new LinearServo(
             HoodConstants.LEFT_CHANNEL,
             HoodConstants.LENGTH,
@@ -22,8 +24,8 @@ public class HoodIOSpark implements HoodIO {
     }
 
     public void periodic() {
-        leftServo.update();
-        rightServo.update();
+        Logger.recordOutput(Hood.LPREFIX + "leftPos", leftServo.getPosition());
+        Logger.recordOutput(Hood.LPREFIX + "rightPos", rightServo.getPosition());
     }
 
     public double getLeftPosition() {
