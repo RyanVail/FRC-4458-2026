@@ -118,10 +118,6 @@ public class RobotContainer {
             driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
                 drive.resetGyroOffset();
             }));
-
-            driverHID.button(XboxController.Button.kRightBumper.value).onTrue(Commands.runOnce(() -> {
-                intake.toggleDown();
-            }));
         }
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
