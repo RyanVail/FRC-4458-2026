@@ -1,5 +1,0 @@
-{
-  "AxisControlPow" : 3.0,
-  "ControlDeadzone" : 0.02,
-  "/Subsystems/Intake/voltage" : 10.0
-}

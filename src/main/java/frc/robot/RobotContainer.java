@@ -36,8 +36,6 @@ public class RobotContainer {
     Hood hood;
 
     public RobotContainer() {
-        Constants.loadConstants();
-
         operatorHID = new CommandGenericHID(InputConstants.OPERATOR_CONTROLLER_PORT);
 
         // For simulations it's easier to have one controller.
@@ -113,12 +111,6 @@ public class RobotContainer {
         }));
 
         SmartDashboard.putData("Command scheduler", CommandScheduler.getInstance());
-
-        if (Constants.TUNNING) {
-            SmartDashboard.putData("Construct Constants", Commands.runOnce(() -> {
-                Constants.constructEntries();
-            }).ignoringDisable(true));
-        }
 
         if (Robot.isReal()) {
             driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {

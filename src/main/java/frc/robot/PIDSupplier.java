@@ -15,9 +15,6 @@ public final class PIDSupplier implements Supplier<PIDController> {
         if (Constants.TUNNING) {
             this.key = key;
 
-            // When constants get updated this will load in the correct value.
-            Constants.registerConstant(key, backup);
-
             if (!Preferences.containsKey(key + ".p")) {
                 loadConstants(key, backup);
             }

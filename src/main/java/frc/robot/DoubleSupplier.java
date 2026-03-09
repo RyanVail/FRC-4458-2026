@@ -12,9 +12,6 @@ public class DoubleSupplier implements Supplier<Double> {
         if (Constants.TUNNING) {
             this.key = key;
 
-            // When constants get updated this will load in the correct value.
-            Constants.registerConstant(key, backup);
-
             if (!Preferences.containsKey(key)) {
                 Preferences.setDouble(key, backup);
             }

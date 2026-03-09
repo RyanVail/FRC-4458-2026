@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
     DoubleSupplier rotDownPos = new DoubleSupplier(LPREFIX + "rotDownPos", 80.0);
     DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "Ossilate", 20.0);
 
-    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 2.0);
+    DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 10.0);
     DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 2.0);
 
     double rotSetpoint;

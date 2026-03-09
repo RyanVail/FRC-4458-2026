@@ -19,79 +19,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignPose;
 import frc.robot.control.BetterTrapezoidProfile;
 
 public final class Constants {
-    static private Map<String, Object> entries = new HashMap<>();
-
-    public static final void registerConstant(String key, Object value) {
-        entries.put(key, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static final void loadConstants() {
-        File file = new File(Filesystem.getDeployDirectory() + "/constants.json");
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            Map<String, Object> map = mapper.readValue(file, Map.class);
-            for (String key : map.keySet()) {
-                Object obj = map.get(key);
-                if (obj instanceof Double) {
-                    Preferences.setDouble(key, (Double) obj);
-                } else if (obj instanceof Map) {
-                    Map<String, Object> dict = (Map<String, Object>) obj;
-                    if (dict.get("kP") != null) {
-                        PIDConstants constants = new PIDConstants(
-                                (Double) dict.get("kP"),
-                                (Double) dict.get("kI"),
-                                (Double) dict.get("kD"));
-
-                        PIDSupplier.loadConstants(key, constants);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static final void updateConstant(String key) {
-        Object entry = entries.get(key);
-        if (entry instanceof Double) {
-            entries.put(key, Preferences.getDouble(key, (Double) entry));
-        } else if (entry instanceof PIDConstants) {
-            entries.put(key, PIDSupplier.gatherConstants(key));
-        }
-    }
-
-    private static final void updateConstants() {
-        for (String key : entries.keySet()) {
-            updateConstant(key);
-        }
-    }
-
-    public static final void constructEntries() {
-        CommandScheduler.getInstance().schedule(Commands.print(
-                "writing to " + Filesystem.getDeployDirectory().toPath().toString()));
-
-        File file = new File(Filesystem.getDeployDirectory() + "/constants.json");
-        ObjectMapper mapper = new ObjectMapper();
-        updateConstants();
-
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, entries);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static final boolean TUNNING = true;
     public static final double LOOP_TIME = 0.02;
 

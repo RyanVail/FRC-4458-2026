@@ -16,7 +16,7 @@ public class TeleopCommand extends Command {
     CommandGenericHID controller;
 
     DoubleSupplier axisControlPow = new DoubleSupplier("AxisControlPow", 3.0);
-    DoubleSupplier deadzone = new DoubleSupplier("ControlDeadzone", 0.08);
+    DoubleSupplier deadzone = new DoubleSupplier("ControlDeadzone", 0.02);
 
     SlewRateLimiter xl = new SlewRateLimiter(2.5);
     SlewRateLimiter yl = new SlewRateLimiter(2.5);
