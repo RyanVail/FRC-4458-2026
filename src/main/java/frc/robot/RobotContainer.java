@@ -116,10 +116,6 @@ public class RobotContainer {
             driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
                 drive.resetGyroOffset();
             }));
-
-            driverHID.button(XboxController.Button.kRightBumper.value).onTrue(Commands.runOnce(() -> {
-                intake.toggleDown();
-            }));
         }
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
@@ -144,11 +140,19 @@ public class RobotContainer {
             drive.toggleTargetLock(TargetLock.Hub);
         }));
 
-        operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
+        // operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
+        //     intake.start();
+        // }));
+
+        // operatorHID.button(XboxController.Button.kB.value).onFalse(Commands.runOnce(() -> {
+        //     intake.stop();
+        // }));
+        
+        driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             intake.start();
         }));
 
-        operatorHID.button(XboxController.Button.kB.value).onFalse(Commands.runOnce(() -> {
+        driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             intake.stop();
         }));
 

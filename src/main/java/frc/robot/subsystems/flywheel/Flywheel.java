@@ -21,11 +21,11 @@ public class Flywheel extends SubsystemBase {
     PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.0));
 
-    SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(0, 0.00215);
-    SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(0, 0.00215);
+    SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(0, 0.001825);
+    SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(0, 0.001825);
 
-    SlewRateLimiter leftSlew = new SlewRateLimiter(6.0);
-    SlewRateLimiter rightSlew = new SlewRateLimiter(6.0);
+    SlewRateLimiter leftSlew = new SlewRateLimiter(16.0);
+    SlewRateLimiter rightSlew = new SlewRateLimiter(16.0);
 
     double setpoint = 0.0;
 
@@ -68,7 +68,7 @@ public class Flywheel extends SubsystemBase {
         right.setSetpoint(setpoint);
 
         double leftVel = getLeftVelocity();
-        double rightVel = getRightVelocity();
+        double rightVel = -getRightVelocity();
 
         double leftOutput = left.calculate(leftVel) + leftFF.calculate(setpoint);
         double rightOutput = right.calculate(rightVel) + rightFF.calculate(setpoint);
@@ -77,7 +77,7 @@ public class Flywheel extends SubsystemBase {
         rightOutput = rightSlew.calculate(rightOutput);
 
         setLeftVoltage(leftOutput);
-        setRightVoltage(rightOutput);
+        setRightVoltage(-rightOutput);
 
         Logger.recordOutput(LPREFIX + "Target", target);
         Logger.recordOutput(LPREFIX + "Distance", distance.get());
