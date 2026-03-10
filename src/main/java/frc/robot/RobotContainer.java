@@ -24,6 +24,7 @@ import frc.robot.subsystems.hopper.HopperIOSim;
 import frc.robot.subsystems.hopper.HopperIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOSpark;
+import frc.robot.subsystems.intake.Intake.State;
 
 public class RobotContainer {
     CommandGenericHID operatorHID;
@@ -75,27 +76,52 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "StartFlywheel",
-                Commands.run(() -> flywheel.start()));
+                Commands.runOnce(() -> flywheel.start()));
 
         NamedCommands.registerCommand(
-                "StartIntake",
-                Commands.run(() -> intake.start()));
+                "IntakeIntake",
+                Commands.runOnce(() -> intake.setState(State.Intaking)));
 
         NamedCommands.registerCommand(
-                "StopIntake",
-                Commands.run(() -> intake.stop()));
+                "IntakeIdle",
+                Commands.runOnce(() -> intake.setState(State.Idle)));
 
         NamedCommands.registerCommand(
                 "StartHopper",
-                Commands.run(() -> hopper.start()));
+                Commands.runOnce(() -> hopper.start()));
 
         NamedCommands.registerCommand(
                 "StopHopper",
-                Commands.run(() -> hopper.stop()));
+                Commands.runOnce(() -> hopper.stop()));
 
         NamedCommands.registerCommand(
-                "ToggleTargetLock",
-                Commands.run(() -> drive.toggleTargetLock(TargetLock.Hub)));
+                "LockOnHub",
+                Commands.runOnce(() -> drive.setTargetLock(TargetLock.Hub)));
+
+        NamedCommands.registerCommand(
+                "Unlock",
+                Commands.runOnce(() -> drive.setTargetLock(TargetLock.None)));
+
+        NamedCommands.registerCommand(
+                "StartShooting",
+                Commands.runOnce(() -> {
+                    intake.setState(State.Oscillating);
+                    hopper.start();
+                }));
+
+        NamedCommands.registerCommand(
+                "StopShooting",
+                Commands.runOnce(() -> {
+                    intake.setState(State.Idle);
+                    hopper.stop();
+                }));
+
+        NamedCommands.registerCommand(
+                "EjectPreload",
+                Commands.sequence(
+                        Commands.runOnce(() -> intake.setState(State.PreloadEject)),
+                        Commands.waitSeconds(1),
+                        Commands.runOnce(() -> intake.setState(State.Idle))));
 
         NamedCommands.registerCommand("Shoot", new Shoot(flywheel, hopper));
 
@@ -128,32 +154,24 @@ public class RobotContainer {
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             hopper.start();
-            intake.startShooting();
+            intake.setState(State.Oscillating);
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             hopper.stop();
-            intake.stopShooting();
+            intake.setState(State.Idle);
         }));
 
         operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
             drive.toggleTargetLock(TargetLock.Hub);
         }));
 
-        // operatorHID.button(XboxController.Button.kB.value).onTrue(Commands.runOnce(() -> {
-        //     intake.start();
-        // }));
-
-        // operatorHID.button(XboxController.Button.kB.value).onFalse(Commands.runOnce(() -> {
-        //     intake.stop();
-        // }));
-        
         driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
-            intake.start();
+            intake.setState(State.Intaking);
         }));
 
         driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
-            intake.stop();
+            intake.setState(State.Idle);
         }));
 
         drive.setDefaultCommand(

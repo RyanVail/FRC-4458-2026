@@ -18,6 +18,9 @@ public class Intake extends SubsystemBase {
         // Held high to keep over bump.
         Idle,
 
+        // Ejecting the fuel in the preload.
+        PreloadEject,
+
         // Held down to intake fuel.
         Intaking,
 
@@ -106,27 +109,21 @@ public class Intake extends SubsystemBase {
     private double nextTargetVoltage() {
         return switch (state) {
             case Intaking -> voltage.get();
+            case PreloadEject -> shootingVoltage.get();
             case Oscillating -> shootingVoltage.get();
             case Crunching -> shootingVoltage.get();
             default -> 0.0;
         };
     }
 
-    public void start() {
-        state = State.Intaking;
-    }
+    public void setState(State state) {
+        this.state = state;
 
-    public void stop() {
-        state = State.Idle;
-    }
-
-    public void startShooting() {
-        shootStart = Timer.getFPGATimestamp();
-        state = State.Oscillating;
-    }
-
-    public void stopShooting() {
-        state = State.Idle;
+        switch (state) {
+            case Crunching, Oscillating -> shootStart = Timer.getFPGATimestamp();
+            default -> {
+            }
+        }
     }
 
     public void setVoltage(double voltage) {
