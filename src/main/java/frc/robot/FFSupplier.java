@@ -38,8 +38,7 @@ public final class FFSupplier implements Supplier<SimpleMotorFeedforward> {
         return new Config(s, v);
     }
 
-    private static final void loadConstants(String key, Config config)
-    {
+    private static final void loadConstants(String key, Config config) {
         Preferences.setDouble(key + ".s", config.kS);
         Preferences.setDouble(key + ".v", config.kV);
     }
