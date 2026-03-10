@@ -78,36 +78,52 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "StartFlywheel",
-                Commands.run(() -> flywheel.start()));
+                Commands.runOnce(() -> flywheel.start()));
 
         NamedCommands.registerCommand(
                 "IntakeIntake",
-                Commands.run(() -> intake.setState(State.Intaking)));
+                Commands.runOnce(() -> intake.setState(State.Intaking)));
 
         NamedCommands.registerCommand(
                 "IntakeIdle",
-                Commands.run(() -> intake.setState(State.Idle)));
+                Commands.runOnce(() -> intake.setState(State.Idle)));
 
         NamedCommands.registerCommand(
                 "StartHopper",
-                Commands.run(() -> hopper.start()));
+                Commands.runOnce(() -> hopper.start()));
 
         NamedCommands.registerCommand(
                 "StopHopper",
-                Commands.run(() -> hopper.stop()));
+                Commands.runOnce(() -> hopper.stop()));
 
         NamedCommands.registerCommand(
-                "ToggleTargetLock",
-                Commands.run(() -> drive.toggleTargetLock(TargetLock.Hub)));
+                "LockOnHub",
+                Commands.runOnce(() -> drive.setTargetLock(TargetLock.Hub)));
 
         NamedCommands.registerCommand(
-            "EjectPreload",
-            Commands.sequence(
-                Commands.runOnce(() -> intake.setState(State.PreloadEject)),
-                Commands.waitSeconds(1),
-                Commands.runOnce(() -> intake.setState(State.Idle))
-            )
-        );
+                "Unlock",
+                Commands.runOnce(() -> drive.setTargetLock(TargetLock.None)));
+
+        NamedCommands.registerCommand(
+                "StartShooting",
+                Commands.runOnce(() -> {
+                    intake.setState(State.Oscillating);
+                    hopper.start();
+                }));
+
+        NamedCommands.registerCommand(
+                "StopShooting",
+                Commands.runOnce(() -> {
+                    intake.setState(State.Idle);
+                    hopper.stop();
+                }));
+
+        NamedCommands.registerCommand(
+                "EjectPreload",
+                Commands.sequence(
+                        Commands.runOnce(() -> intake.setState(State.PreloadEject)),
+                        Commands.waitSeconds(1),
+                        Commands.runOnce(() -> intake.setState(State.Idle))));
 
         NamedCommands.registerCommand("Shoot", new Shoot(flywheel, hopper));
 

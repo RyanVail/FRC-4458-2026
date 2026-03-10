@@ -61,13 +61,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ToggleTargetLock"
+                  "name": "LockOnHub"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "StartHopper"
+                  "name": "StartShooting"
                 }
               }
             ]
@@ -76,19 +76,13 @@
         {
           "type": "named",
           "data": {
-            "name": "StopHopper"
+            "name": "StopShooting"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StopFlywheel"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ToggleTargetLock"
+            "name": "Unlock"
           }
         }
       ]
