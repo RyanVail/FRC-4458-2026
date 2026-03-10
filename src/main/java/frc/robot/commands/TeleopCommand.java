@@ -15,7 +15,7 @@ public class TeleopCommand extends Command {
     Drive drive;
     CommandGenericHID controller;
 
-    DoubleSupplier axisControlPow = new DoubleSupplier("AxisControlPow", 3.0);
+    DoubleSupplier axisControlPow = new DoubleSupplier("AxisControlPow", 2.0);
     DoubleSupplier deadzone = new DoubleSupplier("ControlDeadzone", 0.02);
 
     SlewRateLimiter xl = new SlewRateLimiter(2.5);
