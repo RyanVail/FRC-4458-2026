@@ -16,7 +16,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.drive.Drive.TargetLock;
 import frc.robot.subsystems.flywheel.Flywheel;
-import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIOServo;
@@ -49,7 +48,6 @@ public class RobotContainer {
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
-            flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance);
             hopper = new Hopper(new HopperIOSim());
         } else {
             drive = new Drive(new DriveIOSwerve());

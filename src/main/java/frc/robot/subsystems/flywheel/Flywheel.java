@@ -4,13 +4,30 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DoubleSupplier;
+import frc.robot.PIDSupplier;
 import frc.robot.Constants.FlyWheelConstants;
 
 public class Flywheel extends SubsystemBase {
     FlywheelIO io;
+
+    PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.0));
+    PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.0));
+
+    SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(0, 0.00215);
+    SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(0, 0.00215);
+
+    SlewRateLimiter leftSlew = new SlewRateLimiter(6.0);
+    SlewRateLimiter rightSlew = new SlewRateLimiter(6.0);
+
+    double setpoint = 0.0;
 
     /**
      * Supplies the distance from the robot to the target.
@@ -37,21 +54,40 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
+        PIDController left = leftPID.get();
+        PIDController right = rightPID.get();
+
         double target = getTargetVelocity();
+        if (spinning && setpoint != target) {
+            setpoint = target;
+        } else if (!spinning) {
+            setpoint = 0.0;
+        }
 
-        double setpoint = spinning ? target : 0.0;
-        io.setLeftVelocitySetpoint(setpoint);
-        io.setRightVelocitySetpoint(setpoint);
+        left.setSetpoint(setpoint);
+        right.setSetpoint(setpoint);
 
-        io.periodic();
-        io.simulationPeriodic();
+        double leftVel = getLeftVelocity();
+        double rightVel = getRightVelocity();
+
+        double leftOutput = left.calculate(leftVel) + leftFF.calculate(setpoint);
+        double rightOutput = right.calculate(rightVel) + rightFF.calculate(setpoint);
+
+        leftOutput = leftSlew.calculate(leftOutput);
+        rightOutput = rightSlew.calculate(rightOutput);
+
+        setLeftVoltage(leftOutput);
+        setRightVoltage(rightOutput);
 
         Logger.recordOutput(LPREFIX + "Target", target);
         Logger.recordOutput(LPREFIX + "Distance", distance.get());
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
 
-        Logger.recordOutput(LPREFIX + "LeftVelocity", getLeftVelocity());
-        Logger.recordOutput(LPREFIX + "RightVelocity", getRightVelocity());
+        Logger.recordOutput(LPREFIX + "LeftVelocity", leftVel);
+        Logger.recordOutput(LPREFIX + "LeftOutput", leftOutput);
+
+        Logger.recordOutput(LPREFIX + "RightVelocity", rightVel);
+        Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
     }
 
     private double getTargetVelocity() {
@@ -67,11 +103,27 @@ public class Flywheel extends SubsystemBase {
         spinning = false;
     }
 
+    public void setLeftVoltage(double voltage) {
+        io.setLeftVoltage(voltage);
+    }
+
+    public void setRightVoltage(double voltage) {
+        io.setRightVoltage(voltage);
+    }
+
     public double getLeftVelocity() {
         return io.getLeftVelocity();
     }
 
     public double getRightVelocity() {
         return io.getRightVelocity();
+    }
+
+    public double getLeftVoltage() {
+        return io.getLeftVoltage();
+    }
+
+    public double getRightVoltage() {
+        return io.getRightVoltage();
     }
 }

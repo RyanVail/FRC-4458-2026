@@ -85,7 +85,7 @@ public final class Constants {
                         Rotation2d.kZero,
                         0,
                         0,
-                        0)
+                        0)  
         };
         public static final double MAX_SECONDS = 0.8;
 
@@ -153,9 +153,6 @@ public final class Constants {
         public static final double[][] VEL_MAP = {
                 { 3.4, 3400.0 },
         };
-
-        public static final double P = 0.005;
-        public static final double FF_V = 0.02;
     }
 
     public static final class HoodConstants {
