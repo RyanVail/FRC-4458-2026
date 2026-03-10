@@ -144,8 +144,8 @@ public final class Constants {
     }
 
     public static final class FlyWheelConstants {
-        public static final int LEFT_PORT = 10;
-        public static final int RIGHT_PORT = 14;
+        public static final int LEFT_PORT = 14;
+        public static final int RIGHT_PORT = 10;
         public static final double MOI = 0.005;
         public static final double GEARING = 1.0;
         public static final double[] STD_DEVS = { 0.0 };
@@ -159,8 +159,8 @@ public final class Constants {
     }
 
     public static final class HoodConstants {
-        public static final int LEFT_CHANNEL = 4;
-        public static final int RIGHT_CHANNEL = 5;
+        public static final int LEFT_CHANNEL = 0;
+        public static final int RIGHT_CHANNEL = 1;
 
         /**
          * The max length of the servo in mm.

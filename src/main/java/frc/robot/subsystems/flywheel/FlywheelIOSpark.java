@@ -20,8 +20,8 @@ public class FlywheelIOSpark implements FlywheelIO {
         rightSpark = new SparkFlex(FlyWheelConstants.RIGHT_PORT, MotorType.kBrushless);
 
         Config config = new Config();
-        config.p = 0.005;
-        config.ffK = 0.02;
+        config.p = 0.0;
+        config.ffK = 0.0;
 
         leftNetworkConfig = new NetworkSparkFlexConfig(
             Flywheel.LPREFIX + "left/",

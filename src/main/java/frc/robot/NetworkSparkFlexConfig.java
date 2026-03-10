@@ -31,7 +31,7 @@ public class NetworkSparkFlexConfig {
         this.config = backup;
 
         broadcast();
-        update();
+        setConfig();
     }
 
     public void broadcast() {

@@ -25,7 +25,7 @@ public class Hood extends SubsystemBase {
         }
     };
 
-    DoubleSupplier tmpSetpoint = new DoubleSupplier("tmpSetpoint", 0.0);
+    DoubleSupplier tmpSetpoint = new DoubleSupplier(LPREFIX + "tmpSetpoint", 0.0);
 
     public static final String LPREFIX = "/Subsystems/Hood/";
 
@@ -40,16 +40,14 @@ public class Hood extends SubsystemBase {
         io.simulationPeriodic();
     
         // TODO: TMP use the distance.
-        if (tmpSetpoint.get() != setpoint) {
-            setSetopint(tmpSetpoint.get());
-        }
+        setSetpoint(tmpSetpoint.get());
 
         Logger.recordOutput(LPREFIX + "leftPosition", getLeftPosition());
         Logger.recordOutput(LPREFIX + "rightPosition", getRightPosition());
         Logger.recordOutput(LPREFIX + "setpoint", setpoint);
     }
 
-    public void setSetopint(double setpoint) {
+    public void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
         io.setSetpoint(setpoint);
     }

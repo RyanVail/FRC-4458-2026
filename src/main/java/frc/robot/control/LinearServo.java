@@ -7,9 +7,6 @@ public class LinearServo extends Servo {
     double speed;
     double length;
 
-    double targetPos;
-    double pos;
-
     /**
      * Creates a class able to control a linear servo.
      * 
@@ -22,11 +19,11 @@ public class LinearServo extends Servo {
         this.length = length;
         this.speed = speed;
         setBoundsMicroseconds(
-            2_000_000,
-            1_800_000,
-            1_500_000,
-            1_200_000,
-            1_000_000
+            2_000,
+            1_800,
+            1_500,
+            1_200,
+            1_000
         );
     }
 
@@ -34,14 +31,11 @@ public class LinearServo extends Servo {
      * Sets the target position of this servo in mm.
      */
     public void setSetpoint(double setpoint) {
-        targetPos = MathUtil.clamp(setpoint, 0, length);
-        setPosition(targetPos / length);
+        setpoint = MathUtil.clamp(setpoint, 0, length);
+        setSpeed(setpoint / length * 2 - 1);
     }
 
-    /**
-     * Checks if the servo is its setpoint within some bound.
-     */
-    public boolean isFinished(double bounds) {
-        return Math.abs(pos - targetPos) <= bounds;
+    public double getPosition() {
+        return (getSpeed() + 1) * 0.5 * length;
     }
 }

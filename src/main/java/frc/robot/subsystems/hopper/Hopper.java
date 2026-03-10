@@ -9,7 +9,7 @@ public class Hopper extends SubsystemBase {
     HopperIO io;
     boolean spinning = false;
 
-    DoubleSupplier conveyorVoltage = new DoubleSupplier(LPREFIX + "conveyorVoltage", 10.0);
+    DoubleSupplier conveyorVoltage = new DoubleSupplier(LPREFIX + "conveyorVoltage", 12.0);
     DoubleSupplier shooterVoltage = new DoubleSupplier(LPREFIX + "shooterVoltage", 12.0);
 
     private static final String LPREFIX = "/Subsystems/Hopper/";
