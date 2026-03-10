@@ -1,0 +1,100 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "EjectPreload"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Start To Depot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Pickup"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "StartFlywheel"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIdle"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Depot To Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ToggleTargetLock"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StartHopper"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopHopper"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopFlywheel"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ToggleTargetLock"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
