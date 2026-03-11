@@ -76,16 +76,28 @@ public final class Constants {
         public static final Camera CAMERAS[] = {
                 new Camera("Front",
                         new Transform3d(
-                                Units.inchesToMeters(8.0), // 0
-                                Units.inchesToMeters(0.0), // 7.5
-                                Units.inchesToMeters(26), // 28
-                                new Rotation3d(0, Units.degreesToRadians(-55), 0)),
+                                Units.inchesToMeters(8.0),
+                                Units.inchesToMeters(0.0),
+                                Units.inchesToMeters(26),
+                                new Rotation3d(0, Units.degreesToRadians(-22), 0)),
                         0,
                         0,
                         Rotation2d.kZero,
                         0,
                         0,
-                        0)  
+                        0),
+                new Camera("Back",
+                        new Transform3d(
+                                Units.inchesToMeters(-12),
+                                Units.inchesToMeters(0.0),
+                                Units.inchesToMeters(16.128),
+                                new Rotation3d(0, 0, Units.degreesToRadians(180.0))),
+                        0,
+                        0,
+                        Rotation2d.kZero,
+                        0,
+                        0,
+                        0)
         };
         public static final double MAX_SECONDS = 0.8;
 
@@ -121,9 +133,9 @@ public final class Constants {
         }
 
         private static final double[][] TIME_MAP_DATA = {
-            { 0.0, 1.0 },
-            { 1.0, 4.0 },
-            { 2.0, 7.0 },
+                { 0.0, 1.0 },
+                { 1.0, 4.0 },
+                { 2.0, 7.0 },
         };
 
         public static final InterpolatingDoubleTreeMap TIME_MAP = new InterpolatingDoubleTreeMap();
@@ -151,7 +163,11 @@ public final class Constants {
         public static final double[] STD_DEVS = { 0.0 };
 
         public static final double[][] VEL_MAP = {
-                { 3.4, 3400.0 },
+                { 1.5, 3645.0 },
+                { 2.3, 3875.0 },
+                { 2.8, 3950.0 },
+                { 3.1, 4150.0 },
+                { 4.5, 4445.0 }
         };
     }
 

@@ -17,7 +17,10 @@ public class AutoManager {
 
     private static boolean inited;
 
-    private static final String[] autos = {};
+    private static final String[] autos = {
+        "Depot Only",
+        "Sweep",
+    };
 
     public static void configureAutos(Drive drive) {
         RobotConfig config = null;

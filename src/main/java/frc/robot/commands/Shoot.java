@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.Hopper.State;
 
 /**
  * A command that starts shooting by starting the flywheel and hopper until
@@ -20,12 +21,12 @@ public class Shoot extends Command {
 
     public void initialize() {
         flywheel.start();
-        hopper.start();
+        hopper.setState(State.Running);
     }
 
     @Override
     public void end(boolean interrupted) {
         flywheel.stop();
-        hopper.stop();
+        hopper.setState(State.Idle);
     }
 }

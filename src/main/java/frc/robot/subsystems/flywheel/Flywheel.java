@@ -34,6 +34,8 @@ public class Flywheel extends SubsystemBase {
     DoubleSupplier pidMinDelta = new DoubleSupplier(LPREFIX + "pidMinDelta", 200);
     DoubleSupplier slowPidMinDelta = new DoubleSupplier(LPREFIX + "pidSlowMinDelta", 108);
 
+    DoubleSupplier unjamVoltage = new DoubleSupplier(LPREFIX + "unjamVoltage", -10.0);
+
     double setpoint = 0.0;
 
     /**
@@ -42,6 +44,11 @@ public class Flywheel extends SubsystemBase {
     Supplier<Double> distance;
 
     boolean spinning = false;
+    boolean unjam = false;
+
+    boolean shot = false;
+    double lastLeftDelta;
+    double lastRightDelta;
 
     private static final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
     static {
@@ -61,6 +68,13 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (unjam) {
+            double v = unjamVoltage.get();
+            setLeftVoltage(v);
+            setRightVoltage(-v);
+            return;
+        }
+
         PIDController left = leftPID.get();
         PIDController right = rightPID.get();
 
@@ -129,7 +143,7 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "Target", target);
         Logger.recordOutput(LPREFIX + "Distance", distance.get());
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
-        
+
         Logger.recordOutput(LPREFIX + "LeftDelta", leftDelta);
         Logger.recordOutput(LPREFIX + "LeftVelocity", leftVel);
         Logger.recordOutput(LPREFIX + "LeftOutput", leftOutput);
@@ -137,11 +151,42 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "RightDelta", rightDelta);
         Logger.recordOutput(LPREFIX + "RightVelocity", rightVel);
         Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
+
+        checkShot(leftDelta, rightDelta);
+    }
+
+    public void startUnjam() {
+        unjam = true;
+    }
+
+    public void stopUnjam() {
+        unjam = false;
+    }
+
+    public Supplier<Boolean> getShot() {
+        return () -> shot;
+    }
+
+    private void checkShot(double leftDelta, double rightDelta) {
+        boolean leftShot = setpoint > 20.0
+                && lastLeftDelta < -3.0
+                && leftDelta > 3.0;
+
+        boolean rightShot = setpoint > 20.0
+                && lastRightDelta < -3.0
+                && rightDelta > 3.0;
+
+        Logger.recordOutput(LPREFIX + "leftShot", leftShot);
+        Logger.recordOutput(LPREFIX + "rightShot", rightShot);
+
+        lastLeftDelta = leftDelta;
+        lastRightDelta = rightDelta;
+        shot = leftShot || rightShot;
     }
 
     private double getTargetVelocity() {
-        // return velocityMap.get(distance.get());
-        return tmpVelocity.get();
+        return velocityMap.get(distance.get());
+        // return tmpVelocity.get();
     }
 
     public void start() {

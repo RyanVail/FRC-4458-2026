@@ -49,12 +49,12 @@ public class RobotContainer {
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
-            hopper = new Hopper(new HopperIOSim());
+            hopper = new Hopper(new HopperIOSim(), flywheel.getShot());
         } else {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
             flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance);
-            hopper = new Hopper(new HopperIOSpark());
+            hopper = new Hopper(new HopperIOSpark(), flywheel.getShot());
             hood = new Hood(new HoodIOServo(), shoot_distance);
         }
 
@@ -88,11 +88,11 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "StartHopper",
-                Commands.runOnce(() -> hopper.start()));
+                Commands.runOnce(() -> hopper.setState(Hopper.State.Idle)));
 
         NamedCommands.registerCommand(
                 "StopHopper",
-                Commands.runOnce(() -> hopper.stop()));
+                Commands.runOnce(() -> hopper.setState(Hopper.State.Running)));
 
         NamedCommands.registerCommand(
                 "LockOnHub",
@@ -106,14 +106,14 @@ public class RobotContainer {
                 "StartShooting",
                 Commands.runOnce(() -> {
                     intake.setState(State.Oscillating);
-                    hopper.start();
+                    hopper.setState(Hopper.State.Running);
                 }));
 
         NamedCommands.registerCommand(
                 "StopShooting",
                 Commands.runOnce(() -> {
                     intake.setState(State.Idle);
-                    hopper.stop();
+                    hopper.setState(Hopper.State.Idle);
                 }));
 
         NamedCommands.registerCommand(
@@ -153,17 +153,27 @@ public class RobotContainer {
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
-            hopper.start();
+            hopper.setState(Hopper.State.Running);
             intake.setState(State.Oscillating);
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
-            hopper.stop();
+            hopper.setState(Hopper.State.Idle);
             intake.setState(State.Idle);
         }));
 
         operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
             drive.toggleTargetLock(TargetLock.Hub);
+        }));
+
+        operatorHID.button(XboxController.Button.kRightBumper.value).onTrue(Commands.runOnce(() -> {
+            flywheel.startUnjam();
+            hopper.setState(Hopper.State.FixJam);
+        }));
+
+        operatorHID.button(XboxController.Button.kRightBumper.value).onFalse(Commands.runOnce(() -> {
+            flywheel.stopUnjam();
+            hopper.setState(Hopper.State.Idle);
         }));
 
         driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {

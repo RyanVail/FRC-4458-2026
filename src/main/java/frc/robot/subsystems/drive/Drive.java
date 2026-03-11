@@ -94,17 +94,19 @@ public class Drive extends SubsystemBase {
      * Gets the position to target when shooting at the hub.
      */
     private Translation2d getHubTarget() {
-        Pose2d pose = getPose();
-        ChassisSpeeds speeds = getFieldVelocity();
+        // Pose2d pose = getPose();
+        // ChassisSpeeds speeds = getFieldVelocity();
 
-        Translation2d hub_pos = FieldConstants.getHubPos();
+        // Translation2d hub_pos = FieldConstants.getHubPos();
 
-        // The time the fuel spends in the air.
-        double time = FieldConstants.TIME_MAP.get(pose.getTranslation().getDistance(hub_pos));
-        time += shootTimeLatency.get();
+        // // The time the fuel spends in the air.
+        // double time = FieldConstants.TIME_MAP.get(pose.getTranslation().getDistance(hub_pos));
+        // time += shootTimeLatency.get();
 
-        Translation2d vel = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-        return hub_pos.minus(vel.times(time));
+        // Translation2d vel = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        // return hub_pos.minus(vel.times(time));
+
+        return FieldConstants.getHubPos();
     }
 
     private Rotation2d getTargetRot() {

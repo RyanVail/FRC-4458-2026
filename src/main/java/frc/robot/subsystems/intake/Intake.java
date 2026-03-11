@@ -37,21 +37,22 @@ public class Intake extends SubsystemBase {
 
     double shootStart;
 
-    PIDSupplier rotPID = new PIDSupplier(LPREFIX + "rotPID", new PIDConstants(0.05));
+    PIDSupplier rotPID = new PIDSupplier(LPREFIX + "rotPID", new PIDConstants(0.12));
     ArmFeedforward rotFF = new ArmFeedforward(0.00002, 0.000185, 0.00002);
     TrapezoidProfile rotProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(
             20.0,
             5.0));
 
-    DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "ossilate", 20.0);
+    DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "ossilate", 12.0);
     DoubleSupplier crunchSpeed = new DoubleSupplier(LPREFIX + "crunchSpeed", 4.0);
 
     DoubleSupplier upPos = new DoubleSupplier(LPREFIX + "upPos", 30.0);
+    DoubleSupplier downPos = new DoubleSupplier(LPREFIX + "rotDownPos", 80.0);
     DoubleSupplier idlePos = new DoubleSupplier(LPREFIX + "rotIdle", 60.0);
-    DoubleSupplier intakePos = new DoubleSupplier(LPREFIX + "intakePos", 68.0);
+    DoubleSupplier intakePos = new DoubleSupplier(LPREFIX + "intakePos", 125.0);
 
     DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 10.0);
-    DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 2.0);
+    DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 6.5);
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 
@@ -100,7 +101,7 @@ public class Intake extends SubsystemBase {
         return switch (state) {
             case Intaking -> intakePos.get();
             case Oscillating ->
-                intakePos.get() - ((Math.sin(time * 9.0) + 1.0) * 0.5 * ossilateScale.get());
+                downPos.get() - ((Math.sin(time * 9.0) + 1.0) * 0.5 * ossilateScale.get());
             case Crunching -> Math.max(intakePos.get() - time * crunchSpeed.get(), upPos.get());
             default -> idlePos.get();
         };

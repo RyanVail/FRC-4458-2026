@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4254493580599144,
-        "y": 5.930513552068473
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 0.5960443652449496,
-        "y": 5.950590035610447
-      },
-      "isLocked": false,
-      "linkedName": "DepotPrepickup"
-    },
-    {
-      "anchor": {
         "x": 0.7267617689015686,
         "y": 5.943452211126962
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": -0.11943507669349096,
+        "y": 5.957774463432988
+      },
+      "isLocked": false,
+      "linkedName": "DepotPostpickup"
+    },
+    {
+      "anchor": {
+        "x": 1.4254493580599144,
+        "y": 5.930513552068473
+      },
       "prevControl": {
-        "x": 0.4677931430485313,
-        "y": 5.946910346709777
+        "x": 1.0840358948570032,
+        "y": 5.899860140508839
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DepotPostpickup"
+      "linkedName": "DepotPrepickup"
     }
   ],
   "rotationTargets": [],
