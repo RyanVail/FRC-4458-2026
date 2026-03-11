@@ -145,13 +145,10 @@ public class RobotContainer {
         }
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
-            flywheel.start();
+            flywheel.toggle();
         }));
 
-        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
-            flywheel.stop();
-        }));
-
+        
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             hopper.setState(Hopper.State.Running);
             intake.setState(State.Oscillating);

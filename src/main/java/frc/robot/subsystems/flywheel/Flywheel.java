@@ -189,6 +189,10 @@ public class Flywheel extends SubsystemBase {
         // return tmpVelocity.get();
     }
 
+    public void toggle() {
+        spinning = !spinning;
+    }
+
     public void start() {
         spinning = true;
     }
