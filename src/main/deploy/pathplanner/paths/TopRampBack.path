@@ -8,46 +8,46 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0965199584860312,
-        "y": 4.334066451005184
+        "x": 2.8330810438993823,
+        "y": 4.888209745580294
       },
       "isLocked": false,
       "linkedName": "TopPostRamp"
     },
     {
       "anchor": {
-        "x": 6.934568181818182,
-        "y": 4.825628787878788
+        "x": 4.090813124108416,
+        "y": 5.619985734664765
       },
       "prevControl": {
-        "x": 6.3914996401865025,
-        "y": 4.9567398497807025
+        "x": 4.640797527970226,
+        "y": 5.751049284743136
       },
       "nextControl": {
-        "x": 7.6829938504394875,
-        "y": 4.644939102056144
+        "x": 3.8019405413113327,
+        "y": 5.551146207660274
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.406287878787879,
-        "y": 2.520181818181818
+        "x": 2.5769900142653355,
+        "y": 5.257703281027104
       },
       "prevControl": {
-        "x": 7.1411983689959255,
-        "y": 2.8306812882958523
+        "x": 2.2685773821718973,
+        "y": 5.129789954298272
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopDepotShoot"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -61.65430637692327
+      "rotationDegrees": -8.530765609948146
     }
   ],
   "constraintZones": [],
@@ -62,13 +62,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.15,
-    "rotation": -62.65012421993001
+    "velocity": 0.5,
+    "rotation": -28.95721759878829
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.5,
     "rotation": -25.811202844007223
   },
   "useDefaultConstraints": true

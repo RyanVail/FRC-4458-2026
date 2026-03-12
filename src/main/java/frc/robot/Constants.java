@@ -165,11 +165,13 @@ public final class Constants {
         public static final double FIXED_VEL = 4150.0;
 
         public static final double[][] VEL_MAP = {
-                { 1.5, 3010 },
-                { 2.3, 3240 },
-                { 2.8, 3315 },
-                { 3.1, 3515 },
-                { 4.5, 3810 }
+                { 1.695, 3066 },
+                { 2.1, 3152 },
+                { 2.52, 3318 },
+                { 2.78, 3327 },
+                { 3.174, 3537 },
+                { 3.49, 3625 },
+                { 3.89, 3711 }
         };
 
         /**
