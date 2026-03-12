@@ -19,6 +19,11 @@ import frc.robot.Constants.FlyWheelConstants;
 public class Flywheel extends SubsystemBase {
     FlywheelIO io;
 
+    public enum State {
+        Interp,
+        Fixed,
+    }
+
     PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.002, 0.0, 0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.002, 0.0, 0.0));
 
@@ -49,6 +54,8 @@ public class Flywheel extends SubsystemBase {
     boolean shot = false;
     double lastLeftDelta;
     double lastRightDelta;
+
+    State state = State.Interp;
 
     private static final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
     static {
@@ -155,6 +162,10 @@ public class Flywheel extends SubsystemBase {
         checkShot(leftDelta, rightDelta);
     }
 
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public void startUnjam() {
         unjam = true;
     }
@@ -185,8 +196,10 @@ public class Flywheel extends SubsystemBase {
     }
 
     private double getTargetVelocity() {
-        return velocityMap.get(distance.get());
-        // return tmpVelocity.get();
+        return switch (state) {
+            case Interp -> velocityMap.get(distance.get());
+            case Fixed -> FlyWheelConstants.FIXED_VEL;
+        };
     }
 
     public void toggle() {

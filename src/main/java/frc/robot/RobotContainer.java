@@ -138,6 +138,10 @@ public class RobotContainer {
 
         SmartDashboard.putData("Command scheduler", CommandScheduler.getInstance());
 
+        SmartDashboard.putData("Flywheel override", Commands.runOnce(() -> {
+            flywheel.setState(Flywheel.State.Fixed);
+        }));
+
         if (Robot.isReal()) {
             driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
                 drive.resetGyroOffset();
@@ -148,7 +152,6 @@ public class RobotContainer {
             flywheel.toggle();
         }));
 
-        
         operatorHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             hopper.setState(Hopper.State.Running);
             intake.setState(State.Oscillating);

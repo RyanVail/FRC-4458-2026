@@ -162,6 +162,8 @@ public final class Constants {
         public static final double GEARING = 1.0;
         public static final double[] STD_DEVS = { 0.0 };
 
+        public static final double FIXED_VEL = 4150.0;
+
         public static final double[][] VEL_MAP = {
                 { 1.5, 3645.0 },
                 { 2.3, 3875.0 },
