@@ -191,4 +191,10 @@ public class RobotContainer {
                 drive.getTeleopCommand(
                         (Robot.isReal()) ? driverHID : operatorHID));
     }
+
+    public void teleopInit() {
+        flywheel.start();
+        hopper.setState(Hopper.State.Idle);
+        intake.setState(State.Idle);
+    }
 }
