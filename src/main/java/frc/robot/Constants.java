@@ -171,6 +171,11 @@ public final class Constants {
                 { 3.1, 4150.0 },
                 { 4.5, 4445.0 }
         };
+
+        /**
+         * The amount to nudge the velocity on each press when forced by the operator.
+         */
+        public static final double NUDGE_INC = 15.0;
     }
 
     public static final class HoodConstants {

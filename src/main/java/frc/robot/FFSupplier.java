@@ -26,10 +26,12 @@ public final class FFSupplier implements Supplier<SimpleMotorFeedforward> {
             if (!Preferences.containsKey(key + ".s")) {
                 loadConstants(key, backup);
             }
-        }
 
-        Config constants = gatherConstants(key);
-        this.value = new SimpleMotorFeedforward(constants.kS, constants.kV);
+            Config constants = gatherConstants(key);
+            this.value = new SimpleMotorFeedforward(constants.kS, constants.kV);
+        } else {
+            this.value = new SimpleMotorFeedforward(backup.kS, backup.kV);
+        }
     }
 
     private static final Config gatherConstants(String key) {

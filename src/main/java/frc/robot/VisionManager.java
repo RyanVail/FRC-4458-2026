@@ -35,6 +35,10 @@ public class VisionManager {
     public static List<EstimatedRobotPose> getEstimatedPoses() {
         List<EstimatedRobotPose> poses = new ArrayList<>();
 
+        if (Robot.isSimulation()) {
+            return poses;
+        }
+
         for (int i = 0; i < NUM_CAMERAS; i++) {
             List<PhotonPipelineResult> results = cameras[i].getAllUnreadResults();
             for (PhotonPipelineResult r : results) {

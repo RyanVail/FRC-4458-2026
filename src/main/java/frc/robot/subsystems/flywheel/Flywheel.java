@@ -55,6 +55,11 @@ public class Flywheel extends SubsystemBase {
     double lastLeftDelta;
     double lastRightDelta;
 
+    /**
+     * A nudge in RPMs that can be forced by the operator.
+     */
+    double nudge = 0.0;
+
     State state = State.Interp;
 
     private static final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
@@ -73,6 +78,10 @@ public class Flywheel extends SubsystemBase {
         this.distance = distance;
     }
 
+    public void addNudge(double nudge) {
+        this.nudge += nudge;
+    }
+
     @Override
     public void periodic() {
         if (unjam) {
@@ -88,12 +97,8 @@ public class Flywheel extends SubsystemBase {
         PIDController leftSlow = leftSlowPID.get();
         PIDController rightSlow = rightSlowPID.get();
 
-        double target = getTargetVelocity();
-        if (spinning && setpoint != target) {
-            setpoint = target;
-        } else if (!spinning) {
-            setpoint = 0.0;
-        }
+        double target = getTargetVelocity() + nudge;
+        setpoint = spinning ? target : 0.0;
 
         left.setSetpoint(setpoint);
         right.setSetpoint(setpoint);
@@ -147,6 +152,9 @@ public class Flywheel extends SubsystemBase {
         setLeftVoltage(leftOutput);
         setRightVoltage(-rightOutput);
 
+        io.simulationPeriodic();
+
+        Logger.recordOutput(LPREFIX + "Spinning", spinning);
         Logger.recordOutput(LPREFIX + "Target", target);
         Logger.recordOutput(LPREFIX + "Distance", distance.get());
         Logger.recordOutput(LPREFIX + "Setpoint", setpoint);
@@ -158,6 +166,8 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "RightDelta", rightDelta);
         Logger.recordOutput(LPREFIX + "RightVelocity", rightVel);
         Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
+
+        Logger.recordOutput(LPREFIX + "Nudge", nudge);
 
         checkShot(leftDelta, rightDelta);
     }

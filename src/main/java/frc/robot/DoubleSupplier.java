@@ -16,7 +16,7 @@ public class DoubleSupplier implements Supplier<Double> {
                 Preferences.setDouble(key, backup);
             }
         } else {
-            this.value = Preferences.getDouble(key, backup);
+            this.value = backup;
         }
     }
 

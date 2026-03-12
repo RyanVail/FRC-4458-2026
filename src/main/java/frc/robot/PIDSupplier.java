@@ -18,10 +18,12 @@ public final class PIDSupplier implements Supplier<PIDController> {
             if (!Preferences.containsKey(key + ".p")) {
                 loadConstants(key, backup);
             }
-        }
 
-        PIDConstants constants = gatherConstants(key);
-        this.value = new PIDController(constants.kP, constants.kI, constants.kD);
+            PIDConstants constants = gatherConstants(key);
+            this.value = new PIDController(constants.kP, constants.kI, constants.kD);
+        } else {
+            this.value = new PIDController(backup.kP, backup.kI, backup.kD);
+        }
     }
 
     public static final PIDConstants gatherConstants(String key) {

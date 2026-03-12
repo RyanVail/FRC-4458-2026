@@ -10,17 +10,20 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.drive.Drive.TargetLock;
 import frc.robot.subsystems.flywheel.Flywheel;
+import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIOSim;
 import frc.robot.subsystems.hopper.HopperIOSpark;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSpark;
 import frc.robot.subsystems.intake.Intake.State;
 
@@ -35,17 +38,15 @@ public class RobotContainer {
 
     public RobotContainer() {
         operatorHID = new CommandGenericHID(InputConstants.OPERATOR_CONTROLLER_PORT);
-
-        // For simulations it's easier to have one controller.
-        if (Robot.isReal()) {
-            driverHID = new CommandGenericHID(InputConstants.DRIVE_CONTROLLER_PORT);
-        }
+        driverHID = new CommandGenericHID(InputConstants.DRIVE_CONTROLLER_PORT);
 
         Supplier<Double> shoot_distance = () -> drive.getPose().getTranslation().getDistance(
                 FieldConstants.getHubPos());
 
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
+            intake = new Intake(new IntakeIOSim());
+            flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance);
             hopper = new Hopper(new HopperIOSim(), flywheel.getShot());
         } else {
             drive = new Drive(new DriveIOSwerve());
@@ -138,11 +139,9 @@ public class RobotContainer {
             flywheel.setState(Flywheel.State.Fixed);
         }));
 
-        if (Robot.isReal()) {
-            driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
-                drive.resetGyroOffset();
-            }));
-        }
+        driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
+            drive.resetGyroOffset();
+        }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
             flywheel.toggle();
@@ -178,6 +177,14 @@ public class RobotContainer {
 
         driverHID.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
             intake.setState(State.Idle);
+        }));
+
+        operatorHID.povUp().onTrue(Commands.runOnce(() -> {
+            flywheel.addNudge(FlyWheelConstants.NUDGE_INC);
+        }));
+
+        operatorHID.povDown().onTrue(Commands.runOnce(() -> {
+            flywheel.addNudge(-FlyWheelConstants.NUDGE_INC);
         }));
 
         drive.setDefaultCommand(

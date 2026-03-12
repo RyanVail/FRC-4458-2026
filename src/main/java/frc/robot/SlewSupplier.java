@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public final class SlewSupplier implements Supplier<SlewRateLimiter> {
     String key;
@@ -28,11 +27,13 @@ public final class SlewSupplier implements Supplier<SlewRateLimiter> {
             if (!Preferences.containsKey(key + ".pos")) {
                 loadConstants(key, backup);
             }
-        }
 
-        Config config = gatherConstants(key);
-        lastConfig = config;
-        this.value = new SlewRateLimiter(config.pos, config.neg, 0.0);
+            Config config = gatherConstants(key);
+            lastConfig = config;
+            this.value = new SlewRateLimiter(config.pos, config.neg, 0.0);
+        } else {
+            this.value = new SlewRateLimiter(backup.pos, backup.neg, 0.0);
+        }
     }
 
     private static Config gatherConstants(String key) {
@@ -51,7 +52,6 @@ public final class SlewSupplier implements Supplier<SlewRateLimiter> {
         if (Constants.TUNNING) {
             Config c = gatherConstants(key);
             if (this.lastConfig.neg != c.neg || this.lastConfig.pos != c.pos) {
-                Commands.print("newSlew").schedule();
                 this.value = new SlewRateLimiter(c.pos, c.neg, this.value.lastValue());
             }
 
