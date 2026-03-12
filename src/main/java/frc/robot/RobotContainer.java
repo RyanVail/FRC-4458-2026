@@ -47,12 +47,12 @@ public class RobotContainer {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSim());
             flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance);
-            hopper = new Hopper(new HopperIOSim(), flywheel.getShot());
+            hopper = new Hopper(new HopperIOSim());
         } else {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
             flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance);
-            hopper = new Hopper(new HopperIOSpark(), flywheel.getShot());
+            hopper = new Hopper(new HopperIOSpark());
         }
 
         VisionManager.initialize();

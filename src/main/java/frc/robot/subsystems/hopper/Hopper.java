@@ -1,7 +1,5 @@
 package frc.robot.subsystems.hopper;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.DoubleSupplier;
@@ -30,21 +28,14 @@ public class Hopper extends SubsystemBase {
 
     double cooldownEnd;
 
-    Supplier<Boolean> fuelShot;
-
     private static final String LPREFIX = "/Subsystems/Hopper/";
 
-    public Hopper(HopperIO io, Supplier<Boolean> fuelShot) {
+    public Hopper(HopperIO io) {
         this.io = io;
-        this.fuelShot = fuelShot;
     }
 
     @Override
     public void periodic() {
-        if (fuelShot.get()) {
-            startCooldown();
-        }
-
         switch (state) {
             case FixJam:
                 setConveyorVoltage(0);

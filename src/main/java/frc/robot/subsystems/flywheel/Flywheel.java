@@ -52,8 +52,6 @@ public class Flywheel extends SubsystemBase {
     boolean unjam = false;
 
     boolean shot = false;
-    double lastLeftDelta;
-    double lastRightDelta;
 
     /**
      * A nudge in RPMs that can be forced by the operator.
@@ -168,8 +166,6 @@ public class Flywheel extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "RightOutput", rightOutput);
 
         Logger.recordOutput(LPREFIX + "Nudge", nudge);
-
-        checkShot(leftDelta, rightDelta);
     }
 
     public void setState(State state) {
@@ -182,27 +178,6 @@ public class Flywheel extends SubsystemBase {
 
     public void stopUnjam() {
         unjam = false;
-    }
-
-    public Supplier<Boolean> getShot() {
-        return () -> shot;
-    }
-
-    private void checkShot(double leftDelta, double rightDelta) {
-        boolean leftShot = setpoint > 20.0
-                && lastLeftDelta < -3.0
-                && leftDelta > 3.0;
-
-        boolean rightShot = setpoint > 20.0
-                && lastRightDelta < -3.0
-                && rightDelta > 3.0;
-
-        Logger.recordOutput(LPREFIX + "leftShot", leftShot);
-        Logger.recordOutput(LPREFIX + "rightShot", rightShot);
-
-        lastLeftDelta = leftDelta;
-        lastRightDelta = rightDelta;
-        shot = leftShot || rightShot;
     }
 
     private double getTargetVelocity() {
