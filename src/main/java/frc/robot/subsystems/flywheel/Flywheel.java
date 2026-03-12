@@ -24,10 +24,10 @@ public class Flywheel extends SubsystemBase {
         Fixed,
     }
 
-    PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.002, 0.0, 0.0));
+    PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.004, 0.0, 0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.002, 0.0, 0.0));
 
-    PIDSupplier leftSlowPID = new PIDSupplier(LPREFIX + "leftSlowPID", new PIDConstants(5.0));
+    PIDSupplier leftSlowPID = new PIDSupplier(LPREFIX + "leftSlowPID", new PIDConstants(3.125));
     PIDSupplier rightSlowPID = new PIDSupplier(LPREFIX + "rightSlowPID", new PIDConstants(5.0));
 
     FFSupplier leftFF = new FFSupplier(LPREFIX + "leftFF", new FFSupplier.Config(0, 0.001805));
@@ -36,8 +36,8 @@ public class Flywheel extends SubsystemBase {
     SlewSupplier leftSlew = new SlewSupplier(LPREFIX + "leftSlew", new SlewSupplier.Config(64.0, -17.0));
     SlewSupplier rightSlew = new SlewSupplier(LPREFIX + "leftSlew", new SlewSupplier.Config(64.0, -17.0));
 
-    DoubleSupplier pidMinDelta = new DoubleSupplier(LPREFIX + "pidMinDelta", 200);
-    DoubleSupplier slowPidMinDelta = new DoubleSupplier(LPREFIX + "pidSlowMinDelta", 108);
+    DoubleSupplier pidMinDelta = new DoubleSupplier(LPREFIX + "pidMinDelta", 210);
+    DoubleSupplier slowPidMinDelta = new DoubleSupplier(LPREFIX + "pidSlowMinDelta", 135);
 
     DoubleSupplier unjamVoltage = new DoubleSupplier(LPREFIX + "unjamVoltage", -10.0);
 
@@ -86,6 +86,8 @@ public class Flywheel extends SubsystemBase {
             double v = unjamVoltage.get();
             setLeftVoltage(v);
             setRightVoltage(-v);
+
+            io.simulationPeriodic();
             return;
         }
 
@@ -115,29 +117,29 @@ public class Flywheel extends SubsystemBase {
         double rightOutput = rightFF.get().calculate(setpoint);
 
         // Only apply PID if the vel delta is above the min.
-        if (leftDelta > pidMinDelta.get() && setpoint > 20.0) {
-            leftOutput += left.calculate(leftVel);
-        } else {
-            left.calculate(leftVel);
-        }
+        // if (leftDelta > pidMinDelta.get() && setpoint > 20.0) {
+        //     leftOutput += left.calculate(leftVel);
+        // } else {
+        //     left.calculate(leftVel);
+        // }
 
-        if (leftDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
-            leftOutput += leftSlow.calculate(leftVel);
-        } else {
-            leftSlow.calculate(leftVel);
-        }
+        // if (leftDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
+        //     leftOutput += leftSlow.calculate(leftVel);
+        // } else {
+        //     leftSlow.calculate(leftVel);
+        // }
 
-        if (rightDelta > pidMinDelta.get() && setpoint > 20.0) {
-            rightOutput += right.calculate(rightVel);
-        } else {
-            right.calculate(rightVel);
-        }
+        // if (rightDelta > pidMinDelta.get() && setpoint > 20.0) {
+        //     rightOutput += right.calculate(rightVel);
+        // } else {
+        //     right.calculate(rightVel);
+        // }
 
-        if (rightDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
-            rightOutput += rightSlow.calculate(rightVel);
-        } else {
-            rightSlow.calculate(rightVel);
-        }
+        // if (rightDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
+        //     rightOutput += rightSlow.calculate(rightVel);
+        // } else {
+        //     rightSlow.calculate(rightVel);
+        // }
 
         // Clamping voltage outputs.
         leftOutput = MathUtil.clamp(leftOutput, -12.0, 12.0);
@@ -148,7 +150,7 @@ public class Flywheel extends SubsystemBase {
         rightOutput = rightSlew.get().calculate(rightOutput);
 
         setLeftVoltage(leftOutput);
-        setRightVoltage(-rightOutput);
+        setRightVoltage(-leftOutput);
 
         io.simulationPeriodic();
 

@@ -15,7 +15,7 @@ import frc.robot.PIDSupplier;
 
 public class Intake extends SubsystemBase {
     public enum State {
-        // Held high to keep over bump.
+        // A little above intake height.
         Idle,
 
         // Ejecting the fuel in the preload.
@@ -27,8 +27,8 @@ public class Intake extends SubsystemBase {
         // Oscillating to help feed fuel into the shooter.
         Oscillating,
 
-        // Slowly crunch inward to feed fuel into the shooter.
-        Crunching,
+        // Held high to keep over bump.
+        Bump,
     }
 
     IntakeIO io;
@@ -46,10 +46,10 @@ public class Intake extends SubsystemBase {
     DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "ossilate", 12.0);
     DoubleSupplier crunchSpeed = new DoubleSupplier(LPREFIX + "crunchSpeed", 4.0);
 
-    DoubleSupplier upPos = new DoubleSupplier(LPREFIX + "upPos", 30.0);
+    DoubleSupplier bumpPos = new DoubleSupplier(LPREFIX + "bumpPos", 30.0);
     DoubleSupplier downPos = new DoubleSupplier(LPREFIX + "rotDownPos", 80.0);
     DoubleSupplier idlePos = new DoubleSupplier(LPREFIX + "rotIdle", 60.0);
-    DoubleSupplier intakePos = new DoubleSupplier(LPREFIX + "intakePos", 125.0);
+    DoubleSupplier intakePos = new DoubleSupplier(LPREFIX + "intakePos", 92.0);
 
     DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 10.0);
     DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 6.5);
@@ -102,7 +102,7 @@ public class Intake extends SubsystemBase {
             case Intaking -> intakePos.get();
             case Oscillating ->
                 downPos.get() - ((Math.sin(time * 9.0) + 1.0) * 0.5 * ossilateScale.get());
-            case Crunching -> Math.max(intakePos.get() - time * crunchSpeed.get(), upPos.get());
+            case Bump -> bumpPos.get();
             default -> idlePos.get();
         };
     }
@@ -112,7 +112,6 @@ public class Intake extends SubsystemBase {
             case Intaking -> voltage.get();
             case PreloadEject -> shootingVoltage.get();
             case Oscillating -> shootingVoltage.get();
-            case Crunching -> shootingVoltage.get();
             default -> 0.0;
         };
     }
@@ -121,7 +120,7 @@ public class Intake extends SubsystemBase {
         this.state = state;
 
         switch (state) {
-            case Crunching, Oscillating -> shootStart = Timer.getFPGATimestamp();
+            case Oscillating -> shootStart = Timer.getFPGATimestamp();
             default -> {
             }
         }

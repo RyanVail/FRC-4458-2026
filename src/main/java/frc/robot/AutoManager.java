@@ -20,6 +20,7 @@ public class AutoManager {
     private static final String[] autos = {
         "Depot Only",
         "Sweep",
+        "Middle"
     };
 
     public static void configureAutos(Drive drive) {

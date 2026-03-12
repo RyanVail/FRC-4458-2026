@@ -139,11 +139,15 @@ public class RobotContainer {
             flywheel.setState(Flywheel.State.Fixed);
         }));
 
+        SmartDashboard.putData("Flywheel interp", Commands.runOnce(() -> {
+            flywheel.setState(Flywheel.State.Interp);
+        }));
+
         driverHID.button(XboxController.Button.kStart.value).onTrue(Commands.runOnce(() -> {
             drive.resetGyroOffset();
         }));
 
-        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+        operatorHID.button(XboxController.Button.kA.value).onTrue(Commands.runOnce(() -> {
             flywheel.toggle();
         }));
 
@@ -157,8 +161,12 @@ public class RobotContainer {
             intake.setState(State.Idle);
         }));
 
-        operatorHID.button(XboxController.Button.kY.value).onTrue(Commands.runOnce(() -> {
-            drive.toggleTargetLock(TargetLock.Hub);
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+            drive.setTargetLock(TargetLock.Hub);
+        }));
+
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
+            drive.setTargetLock(TargetLock.None);
         }));
 
         operatorHID.button(XboxController.Button.kRightBumper.value).onTrue(Commands.runOnce(() -> {
@@ -179,6 +187,12 @@ public class RobotContainer {
             intake.setState(State.Idle);
         }));
 
+        driverHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+            intake.setState(State.Bump);
+        })).onFalse(Commands.runOnce(() -> {
+            intake.setState(State.Idle);
+        }));
+
         operatorHID.povUp().onTrue(Commands.runOnce(() -> {
             flywheel.addNudge(FlyWheelConstants.NUDGE_INC);
         }));
@@ -194,6 +208,7 @@ public class RobotContainer {
 
     public void teleopInit() {
         flywheel.start();
+        drive.setTargetLock(TargetLock.None);
         hopper.setState(Hopper.State.Idle);
         intake.setState(State.Idle);
     }

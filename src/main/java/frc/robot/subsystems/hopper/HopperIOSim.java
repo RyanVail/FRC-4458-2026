@@ -11,4 +11,9 @@ public class HopperIOSim implements HopperIO {
     @Override
     public void setShooterVoltage(double voltage) {
     }
+
+    @Override
+    public double getVelocity() {
+        return 0.0;
+    }
 }

@@ -24,4 +24,9 @@ public class HopperIOSpark implements HopperIO {
     public void setShooterVoltage(double voltage) {
         shooterSpark.setVoltage(voltage);
     }
+
+    @Override
+    public double getVelocity() {
+        return shooterSpark.getEncoder().getVelocity();
+    }
 }
