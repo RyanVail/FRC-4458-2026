@@ -3,15 +3,11 @@ package frc.robot.subsystems.flywheel;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import frc.robot.NetworkSparkFlexConfig;
 import frc.robot.Constants.FlyWheelConstants;
 
 public class FlywheelIOSpark implements FlywheelIO {
     SparkFlex leftSpark;
     SparkFlex rightSpark;
-
-    NetworkSparkFlexConfig leftNetworkConfig;
-    NetworkSparkFlexConfig rightNetworkConfig;
 
     public FlywheelIOSpark() {
         leftSpark = new SparkFlex(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
