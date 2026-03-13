@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7672718388018978,
-        "y": 5.4732394298871725
+        "x": 3.8013704287454972,
+        "y": 5.4048960030924995
       },
       "isLocked": false,
       "linkedName": "TopPreRamp"
@@ -20,12 +20,12 @@
         "y": 5.387089871611984
       },
       "prevControl": {
-        "x": 7.246444870178264,
-        "y": 6.52025958167631
+        "x": 7.206592752580708,
+        "y": 6.433425338239124
       },
       "nextControl": {
-        "x": 7.5332239458865216,
-        "y": 5.0521899011444225
+        "x": 7.537647888766543,
+        "y": 5.107311411533454
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 5.257703281027104
       },
       "prevControl": {
-        "x": 7.1599291045246405,
-        "y": 4.522695656947404
+        "x": 7.262127524458763,
+        "y": 4.563136096152217
       },
       "nextControl": {
-        "x": 4.974448105391625,
-        "y": 5.483577388509308
+        "x": 4.952606235150262,
+        "y": 5.467404788336977
       },
       "isLocked": false,
       "linkedName": null
@@ -52,12 +52,12 @@
         "y": 5.387089871611984
       },
       "prevControl": {
-        "x": 6.026864898110999,
-        "y": 5.110846051538214
+        "x": 6.031936082967327,
+        "y": 5.149704859024671
       },
       "nextControl": {
-        "x": 3.233613423067287,
-        "y": 5.439181915664105
+        "x": 3.4280363575000203,
+        "y": 5.412161234097499
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 5.257703281027104
       },
       "prevControl": {
-        "x": 3.2506433091677733,
-        "y": 5.167952950359493
+        "x": 2.937607014739274,
+        "y": 5.15766910737602
       },
       "nextControl": null,
       "isLocked": false,
@@ -124,7 +124,34 @@
       "name": "IntakeIntake",
       "waypointRelativePos": 0.5596890616324329,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIntake"
+        }
+      }
+    },
+    {
+      "name": "IntakeBump",
+      "waypointRelativePos": 1.8922820655191337,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeBump"
+        }
+      }
+    },
+    {
+      "name": "IntakeIdle",
+      "waypointRelativePos": 3.1449194891726586,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIdle"
+        }
+      }
     }
   ],
   "globalConstraints": {

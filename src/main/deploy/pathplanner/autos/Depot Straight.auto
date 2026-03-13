@@ -11,38 +11,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StartFlywheel"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeBump"
+                  "name": "EjectPreload"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TopRamp"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
+                  "pathName": "Left Straight To Depot"
                 }
               }
             ]
@@ -55,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TopRampShoot To Depot"
+                  "pathName": "Depot Pickup"
                 }
               },
               {
@@ -68,9 +43,59 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "Depot Depickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Pickup"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "StartFlywheel"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIdle"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Depot To Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LockOnHub"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StartShooting"
+                }
+              }
+            ]
           }
         }
       ]

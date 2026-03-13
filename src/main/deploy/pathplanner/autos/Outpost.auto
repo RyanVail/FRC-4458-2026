@@ -17,54 +17,28 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeBump"
+                  "name": "EjectPreload"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TopRamp"
+                  "pathName": "Outpost Start"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              }
-            ]
+            "waitTime": 4.0
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "TopRampShoot To Depot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIntake"
-                }
-              }
-            ]
+            "pathName": "Outpost Shoot"
           }
         },
         {

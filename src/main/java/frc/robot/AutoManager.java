@@ -19,8 +19,10 @@ public class AutoManager {
 
     private static final String[] autos = {
         "Depot Only",
-        "Sweep",
-        "Middle"
+        "Depot Straight",
+        "Depot Ramp",
+        "Middle",
+        "Outpost"
     };
 
     public static void configureAutos(Drive drive) {

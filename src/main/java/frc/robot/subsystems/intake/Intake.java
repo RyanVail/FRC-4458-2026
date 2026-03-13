@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
+import frc.robot.SlewSupplier;
 
 public class Intake extends SubsystemBase {
     public enum State {
@@ -53,6 +54,7 @@ public class Intake extends SubsystemBase {
 
     DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 10.0);
     DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 6.5);
+    SlewSupplier slew = new SlewSupplier(LPREFIX + "slew", new SlewSupplier.Config(10.0, -10.0));
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 
@@ -87,8 +89,10 @@ public class Intake extends SubsystemBase {
         Logger.recordOutput(LPREFIX + "RotSetpoint", rotSetpoint);
         Logger.recordOutput(LPREFIX + "RotPosition", rotPosition);
         Logger.recordOutput(LPREFIX + "RotOutput", rotOutput);
+        Logger.recordOutput(LPREFIX + "State", this.state);
 
         double targetVoltage = nextTargetVoltage();
+        targetVoltage = slew.get().calculate(targetVoltage);
 
         Logger.recordOutput(LPREFIX + "TargetVoltage", targetVoltage);
         setVoltage(targetVoltage);

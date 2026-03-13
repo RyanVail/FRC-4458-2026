@@ -24,7 +24,7 @@ public class Flywheel extends SubsystemBase {
         Fixed,
     }
 
-    PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.004, 0.0, 0.0));
+    PIDSupplier leftPID = new PIDSupplier(LPREFIX + "leftPID", new PIDConstants(0.00018, 0.0, 0.0));
     PIDSupplier rightPID = new PIDSupplier(LPREFIX + "rightPID", new PIDConstants(0.002, 0.0, 0.0));
 
     PIDSupplier leftSlowPID = new PIDSupplier(LPREFIX + "leftSlowPID", new PIDConstants(3.125));
@@ -36,7 +36,7 @@ public class Flywheel extends SubsystemBase {
     SlewSupplier leftSlew = new SlewSupplier(LPREFIX + "leftSlew", new SlewSupplier.Config(64.0, -17.0));
     SlewSupplier rightSlew = new SlewSupplier(LPREFIX + "leftSlew", new SlewSupplier.Config(64.0, -17.0));
 
-    DoubleSupplier pidMinDelta = new DoubleSupplier(LPREFIX + "pidMinDelta", 210);
+    DoubleSupplier pidMinDelta = new DoubleSupplier(LPREFIX + "pidMinDelta", 215);
     DoubleSupplier slowPidMinDelta = new DoubleSupplier(LPREFIX + "pidSlowMinDelta", 135);
 
     DoubleSupplier unjamVoltage = new DoubleSupplier(LPREFIX + "unjamVoltage", -10.0);
@@ -117,29 +117,29 @@ public class Flywheel extends SubsystemBase {
         double rightOutput = rightFF.get().calculate(setpoint);
 
         // Only apply PID if the vel delta is above the min.
-        // if (leftDelta > pidMinDelta.get() && setpoint > 20.0) {
-        //     leftOutput += left.calculate(leftVel);
-        // } else {
-        //     left.calculate(leftVel);
-        // }
+        if (leftDelta > pidMinDelta.get() && setpoint > 20.0) {
+            leftOutput += left.calculate(leftVel);
+        } else {
+            left.calculate(leftVel);
+        }
 
-        // if (leftDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
-        //     leftOutput += leftSlow.calculate(leftVel);
-        // } else {
-        //     leftSlow.calculate(leftVel);
-        // }
+        if (leftDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
+            leftOutput += leftSlow.calculate(leftVel);
+        } else {
+            leftSlow.calculate(leftVel);
+        }
 
-        // if (rightDelta > pidMinDelta.get() && setpoint > 20.0) {
-        //     rightOutput += right.calculate(rightVel);
-        // } else {
-        //     right.calculate(rightVel);
-        // }
+        if (rightDelta > pidMinDelta.get() && setpoint > 20.0) {
+            rightOutput += right.calculate(rightVel);
+        } else {
+            right.calculate(rightVel);
+        }
 
-        // if (rightDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
-        //     rightOutput += rightSlow.calculate(rightVel);
-        // } else {
-        //     rightSlow.calculate(rightVel);
-        // }
+        if (rightDelta < -slowPidMinDelta.get() && setpoint > 20.0) {
+            rightOutput += rightSlow.calculate(rightVel);
+        } else {
+            rightSlow.calculate(rightVel);
+        }
 
         // Clamping voltage outputs.
         leftOutput = MathUtil.clamp(leftOutput, -12.0, 12.0);

@@ -84,6 +84,10 @@ public class RobotContainer {
                 Commands.runOnce(() -> intake.setState(State.Idle)));
 
         NamedCommands.registerCommand(
+                "IntakeBump",
+                Commands.runOnce(() -> intake.setState(State.Bump)));
+
+        NamedCommands.registerCommand(
                 "StartHopper",
                 Commands.runOnce(() -> hopper.setState(Hopper.State.Idle)));
 
@@ -120,7 +124,7 @@ public class RobotContainer {
                         Commands.waitSeconds(1),
                         Commands.runOnce(() -> intake.setState(State.Idle))));
 
-        NamedCommands.registerCommand("Shoot", new Shoot(drive, flywheel, hopper));
+        NamedCommands.registerCommand("Shoot", new Shoot(drive, hopper, intake));
 
         AutoManager.configureAutos(drive);
     }
