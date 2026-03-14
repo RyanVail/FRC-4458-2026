@@ -30,6 +30,9 @@ public class Intake extends SubsystemBase {
 
         // Held high to keep over bump.
         Bump,
+
+        /// Zeroing the encoder offset.
+        Zeroing,
     }
 
     IntakeIO io;
@@ -55,6 +58,8 @@ public class Intake extends SubsystemBase {
     DoubleSupplier voltage = new DoubleSupplier(LPREFIX + "voltage", 10.0);
     DoubleSupplier shootingVoltage = new DoubleSupplier(LPREFIX + "shootingVoltage", 6.5);
     SlewSupplier slew = new SlewSupplier(LPREFIX + "slew", new SlewSupplier.Config(10.0, -10.0));
+
+    DoubleSupplier zeroingVoltage = new DoubleSupplier(LPREFIX + "zeroingVoltage", -3.25);
 
     private static final String LPREFIX = "/Subsystems/Intake/";
 
@@ -83,6 +88,10 @@ public class Intake extends SubsystemBase {
         rotOutput += rotFF.calculate(
                 Units.degreesToRadians(rotPosition - 90.0),
                 Units.degreesToRadians(state.velocity));
+
+        if (this.state == State.Zeroing) {
+            rotOutput = zeroingVoltage.get();
+        }
 
         io.setRotVoltage(rotOutput);
 
@@ -152,5 +161,9 @@ public class Intake extends SubsystemBase {
 
     public double getRotVelocity() {
         return io.getRotVelocity();
+    }
+
+    public void zeroRotEncoder() {
+        io.zeroRotEncoder();
     }
 }

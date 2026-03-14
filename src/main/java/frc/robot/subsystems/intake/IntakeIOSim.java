@@ -45,6 +45,9 @@ public class IntakeIOSim implements IntakeIO {
     }
 
     @Override
+    public void zeroRotEncoder() {}
+
+    @Override
     public double getVelocity() {
         return spark.getEncoder().getVelocity();
     }

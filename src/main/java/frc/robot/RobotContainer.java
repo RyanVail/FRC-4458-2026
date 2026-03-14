@@ -205,6 +205,13 @@ public class RobotContainer {
             flywheel.addNudge(-FlyWheelConstants.NUDGE_INC);
         }));
 
+        operatorHID.button(XboxController.Button.kLeftBumper.value).onTrue(Commands.runOnce(() -> {
+            intake.setState(State.Zeroing);
+        })).onFalse(Commands.runOnce(() -> {
+            intake.setState(State.Idle);
+            intake.zeroRotEncoder();
+        }));
+
         drive.setDefaultCommand(
                 drive.getTeleopCommand(
                         (Robot.isReal()) ? driverHID : operatorHID));

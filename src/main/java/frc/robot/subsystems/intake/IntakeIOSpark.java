@@ -44,6 +44,11 @@ public class IntakeIOSpark implements IntakeIO {
     }
 
     @Override
+    public void zeroRotEncoder() {
+        rotSpark.getEncoder().setPosition(0.0);
+    }
+
+    @Override
     public double getPosition() {
         return spark.getEncoder().getPosition();
     }
