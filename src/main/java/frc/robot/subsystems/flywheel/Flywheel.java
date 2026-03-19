@@ -8,14 +8,15 @@ import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.DoubleSupplier;
 import frc.robot.FFSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.SlewSupplier;
-import frc.robot.Constants.FlyWheelConstants;
 
 public class Flywheel extends SubsystemBase {
     FlywheelIO io;
@@ -52,6 +53,7 @@ public class Flywheel extends SubsystemBase {
      * Supplies the distance from the robot to the target.
      */
     Supplier<Double> distance;
+    Supplier<Pose2d> pose;
 
     boolean spinning = false;
     boolean unjam = false;
@@ -76,9 +78,10 @@ public class Flywheel extends SubsystemBase {
 
     public static final String LPREFIX = "/Subsystems/Flywheel/";
 
-    public Flywheel(FlywheelIO io, Supplier<Double> distance) {
+    public Flywheel(FlywheelIO io, Supplier<Double> distance, Supplier<Pose2d> pose) {
         this.io = io;
         this.distance = distance;
+        this.pose = pose;
 
         Preferences.initBoolean(LPREFIX + "/useTmp", false);
     }
@@ -220,6 +223,7 @@ public class Flywheel extends SubsystemBase {
 
     private double getTargetVelocity() {
         if(Preferences.getBoolean(LPREFIX + "/useTmp", false)) return tmpVelocity.get();
+        if(pose.get().getX() > 5 && pose.get().getX() < 11) return 3500;
         return switch (state) {
             case Interp -> velocityMap.get(distance.get());
             case Fixed -> FlyWheelConstants.FIXED_VEL;

@@ -14,14 +14,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.robot.commands.TeleopCommand;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.DoubleSupplier;
 import frc.robot.PIDSupplier;
 import frc.robot.VisionManager;
-import frc.robot.Constants.FieldConstants;
+import frc.robot.commands.TeleopCommand;
 
 public class Drive extends SubsystemBase {
     public class PoseSupplier implements Supplier<Pose2d> {
@@ -113,8 +115,21 @@ public class Drive extends SubsystemBase {
         return FieldConstants.getHubPos();
     }
 
+    Translation2d lockCorner = Translation2d.kZero;
+
     private Translation2d getNearestCorner() {
-        return Translation2d.kZero;
+        double x = 0;
+        if(DriverStation.getAlliance().get().equals(Alliance.Red)) {
+            x = 16;
+        }
+
+        if(getPose().getY() > 4.5) lockCorner = new Translation2d(x, 8);
+        if(getPose().getY() < 3.5) lockCorner = new Translation2d(x, 0);
+        else lockCorner = new Translation2d(x, lockCorner.getY());
+
+        Logger.recordOutput(LPREFIX + "TargetCorner", new Pose2d(lockCorner, Rotation2d.kZero));
+
+        return lockCorner;
     }
 
     private Rotation2d getTargetRot() {

@@ -5,10 +5,11 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -49,12 +50,12 @@ public class RobotContainer {
         if (Robot.isSimulation()) {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSim());
-            flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance);
+            flywheel = new Flywheel(new FlywheelIOSim(), shoot_distance, () -> drive.getPose());
             hopper = new Hopper(new HopperIOSim());
         } else {
             drive = new Drive(new DriveIOSwerve());
             intake = new Intake(new IntakeIOSpark());
-            flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance);
+            flywheel = new Flywheel(new FlywheelIOSpark(), shoot_distance, () -> drive.getPose());
             hopper = new Hopper(new HopperIOSpark());
         }
 
@@ -133,6 +134,16 @@ public class RobotContainer {
                 "StopDriving",
                 Commands.runOnce(() -> drive.driveGyroRelative(0, 0, 0)));
 
+        if(Robot.isSimulation()) {
+            Preferences.initDouble("ResetX", 0d);
+            Preferences.initDouble("ResetY", 0d);
+            Command command = Commands.runOnce(() -> {
+                drive.resetPose(new Pose2d(Preferences.getDouble("ResetX", 0d), Preferences.getDouble("ResetY", 0d), Rotation2d.kZero));
+            });
+            command.setName("Reset Odometry");
+            SmartDashboard.putData(command);
+        }
+
         AutoManager.configureAutos(drive);
     }
 
@@ -176,20 +187,9 @@ public class RobotContainer {
         //     drive.setTargetLock(TargetLock.Hub);
         // }));
         
-        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
-            // boolean flip = (DriverStation.getAlliance().get().equals(Alliance.Blue));
-            // Pose2d pose = drive.getPose();
-            
-            // boolean lockOnHub = false;
-
-            // // if we are on the alliance wall side of the line
-            // if(!flip && pose.getX() < 4) lockOnHub = true;
-            // else if(flip && pose.getX() > 16.5-4) lockOnHub = true;
-            
-            // if(pose.getY() > 4) 
-
-            drive.setTargetLock(TargetLock.Hub);
-
+        operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).whileTrue(Commands.runOnce(() -> {
+            Pose2d pose = drive.getPose();
+            drive.setTargetLock((pose.getX() < 5 || pose.getX() > (11)) ? TargetLock.Hub : TargetLock.Corner);
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
