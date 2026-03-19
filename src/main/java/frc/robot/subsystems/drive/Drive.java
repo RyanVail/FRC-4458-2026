@@ -40,6 +40,7 @@ public class Drive extends SubsystemBase {
         None,
         Hub,
         Fuel,
+        Corner,
     }
 
     public static final String LPREFIX = "/Subsystems/Drive/";
@@ -88,6 +89,9 @@ public class Drive extends SubsystemBase {
 
         Logger.recordOutput(LPREFIX + "targetRot", targetRot);
         Logger.recordOutput(LPREFIX + "targetLock", targetLock);
+
+        Logger.recordOutput(LPREFIX + "HubDist", this.getPose().getTranslation().getDistance(FieldConstants.getHubPos()));
+
     }
 
     /**
@@ -109,10 +113,15 @@ public class Drive extends SubsystemBase {
         return FieldConstants.getHubPos();
     }
 
+    private Translation2d getNearestCorner() {
+        return Translation2d.kZero;
+    }
+
     private Rotation2d getTargetRot() {
         Pose2d pose = getPose();
         return switch (targetLock) {
             case Hub -> getHubTarget().minus(pose.getTranslation()).getAngle();
+            case Corner -> getNearestCorner().minus(pose.getTranslation()).getAngle();
             default -> null;
         };
     }
@@ -174,6 +183,10 @@ public class Drive extends SubsystemBase {
 
     public void resetGyroOffset() {
         this.gyroOffset = this.io.getGyroRotation();
+    }
+
+    public void resetGyroOffsetBackwards() {
+        this.gyroOffset = this.io.getGyroRotation().rotateBy(Rotation2d.k180deg);
     }
 
     public Rotation2d getGyroRotation() {

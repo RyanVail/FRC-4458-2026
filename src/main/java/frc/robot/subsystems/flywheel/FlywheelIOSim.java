@@ -20,6 +20,10 @@ public class FlywheelIOSim implements FlywheelIO {
     SparkFlexSim rightSparkSim;
     FlywheelSim rightMechSim;
 
+    SparkFlex middleSpark;
+    SparkFlexSim middleSparkSim;
+    FlywheelSim middleMechSim;
+
     public FlywheelIOSim() {
         DCMotor leftGearbox = DCMotor.getNeoVortex(1);
         leftSpark = new SparkFlex(FlyWheelConstants.LEFT_PORT, MotorType.kBrushless);
@@ -46,6 +50,19 @@ public class FlywheelIOSim implements FlywheelIO {
             rightGearbox,
             FlyWheelConstants.STD_DEVS
         );
+        
+        DCMotor middleGearbox = DCMotor.getNeoVortex(1);
+        middleSpark = new SparkFlex(41, MotorType.kBrushless);
+        middleSparkSim = new SparkFlexSim(middleSpark, middleGearbox);
+        middleMechSim = new FlywheelSim(
+            LinearSystemId.createFlywheelSystem(
+                middleGearbox,
+                FlyWheelConstants.MOI,
+                FlyWheelConstants.GEARING
+            ),
+            middleGearbox,
+            FlyWheelConstants.STD_DEVS
+        );
     }
 
     @Override
@@ -55,6 +72,11 @@ public class FlywheelIOSim implements FlywheelIO {
 
     @Override
     public void setRightVoltage(double voltage) {
+        rightSpark.setVoltage(voltage);
+    }
+
+    @Override
+    public void setMiddleVoltage(double voltage) {
         rightSpark.setVoltage(voltage);
     }
 
@@ -69,6 +91,11 @@ public class FlywheelIOSim implements FlywheelIO {
     }
 
     @Override
+    public double getMiddleVelocity() {
+        return middleSpark.getEncoder().getVelocity();
+    }
+
+    @Override
     public double getLeftPosition() {
         return leftSpark.getEncoder().getPosition();
     }
@@ -79,6 +106,11 @@ public class FlywheelIOSim implements FlywheelIO {
     }
 
     @Override
+    public double getMiddlePosition() {
+        return middleSpark.getEncoder().getPosition();
+    }
+
+    @Override
     public double getLeftVoltage() {
         return leftSpark.getAppliedOutput() * RoboRioSim.getVInVoltage();
     }
@@ -86,6 +118,11 @@ public class FlywheelIOSim implements FlywheelIO {
     @Override
     public double getRightVoltage() {
         return rightSpark.getAppliedOutput() * RoboRioSim.getVInVoltage();
+    }
+
+    @Override
+    public double getMiddleVoltage() {
+        return middleSpark.getAppliedOutput() * RoboRioSim.getVInVoltage();
     }
 
     @Override
@@ -104,6 +141,15 @@ public class FlywheelIOSim implements FlywheelIO {
 
         rightSparkSim.iterate(
             rightMechSim.getAngularVelocityRPM(),
+            RoboRioSim.getVInVoltage(),
+            Constants.LOOP_TIME
+        );
+
+        middleMechSim.setInput(middleSparkSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        middleMechSim.update(Constants.LOOP_TIME);
+
+        middleSparkSim.iterate(
+            middleMechSim.getAngularVelocityRPM(),
             RoboRioSim.getVInVoltage(),
             Constants.LOOP_TIME
         );

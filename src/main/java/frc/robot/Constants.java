@@ -105,6 +105,7 @@ public final class Constants {
          * The method to use when estimating a pose from april tags.
          */
         public static final Method METHOD = Method.COPROC_MULTI_TAG;
+        public static final Method FALLBACK_METHOD = Method.AVERAGE_BEST;
 
         public enum Method {
             COPROC_MULTI_TAG,
@@ -165,13 +166,25 @@ public final class Constants {
         public static final double FIXED_VEL = 4150.0;
 
         public static final double[][] VEL_MAP = {
-                { 1.695, 3066 },
-                { 2.1, 3152 },
-                { 2.52, 3318 },
-                { 2.78, 3327 },
-                { 3.174, 3537 },
-                { 3.49, 3625 },
-                { 3.89, 3711 }
+                {1.75, 2600},
+                {2.0,2675},
+                {2.25,2750},
+                {2.5,2850},
+                {2.75,2900},
+                {3.0,3000},
+                {3.25,3100},
+                {3.5,3200},
+                {3.75,3350},
+                {4.00,3400}
+
+
+                // { 1.695, 3066 },
+                // { 2.1, 3152 },
+                // { 2.52, 3318 },
+                // { 2.78, 3327 },
+                // { 3.174, 3537 },
+                // { 3.49, 3625 },
+                // { 3.89, 3711 }
         };
 
         /**

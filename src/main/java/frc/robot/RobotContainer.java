@@ -4,6 +4,9 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -14,8 +17,8 @@ import frc.robot.Constants.FlyWheelConstants;
 import frc.robot.Constants.InputConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.drive.Drive.TargetLock;
+import frc.robot.subsystems.drive.DriveIOSwerve;
 import frc.robot.subsystems.flywheel.Flywheel;
 import frc.robot.subsystems.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.flywheel.FlywheelIOSpark;
@@ -23,9 +26,9 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIOSim;
 import frc.robot.subsystems.hopper.HopperIOSpark;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.State;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSpark;
-import frc.robot.subsystems.intake.Intake.State;
 
 public class RobotContainer {
     CommandGenericHID operatorHID;
@@ -126,6 +129,10 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Shoot", new Shoot(drive, hopper, intake));
 
+        NamedCommands.registerCommand(
+                "StopDriving",
+                Commands.runOnce(() -> drive.driveGyroRelative(0, 0, 0)));
+
         AutoManager.configureAutos(drive);
     }
 
@@ -165,8 +172,24 @@ public class RobotContainer {
             intake.setState(State.Idle);
         }));
 
+        // operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+        //     drive.setTargetLock(TargetLock.Hub);
+        // }));
+        
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onTrue(Commands.runOnce(() -> {
+            // boolean flip = (DriverStation.getAlliance().get().equals(Alliance.Blue));
+            // Pose2d pose = drive.getPose();
+            
+            // boolean lockOnHub = false;
+
+            // // if we are on the alliance wall side of the line
+            // if(!flip && pose.getX() < 4) lockOnHub = true;
+            // else if(flip && pose.getX() > 16.5-4) lockOnHub = true;
+            
+            // if(pose.getY() > 4) 
+
             drive.setTargetLock(TargetLock.Hub);
+
         }));
 
         operatorHID.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.2).onFalse(Commands.runOnce(() -> {
@@ -215,6 +238,16 @@ public class RobotContainer {
         drive.setDefaultCommand(
                 drive.getTeleopCommand(
                         (Robot.isReal()) ? driverHID : operatorHID));
+
+        operatorHID.button(XboxController.Button.kX.value).onTrue(
+            Commands.runOnce(() -> {
+                intake.setState(State.Oscillating);
+            })
+        );
+    }
+
+    public void autonomousInit() {
+        drive.resetGyroOffsetBackwards();
     }
 
     public void teleopInit() {

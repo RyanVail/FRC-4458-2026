@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5326818830242506,
-        "y": 0.6386019971469341
+        "x": 2.266462196861626,
+        "y": 5.568231098430813
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.3543939147022963,
-        "y": 0.4633496067163616
+        "x": 2.0881742285396716,
+        "y": 5.39297870800024
       },
       "isLocked": false,
       "linkedName": "OutpostPickup"
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -32.735226272107596
   },
   "useDefaultConstraints": true
 }

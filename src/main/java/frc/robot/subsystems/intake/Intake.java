@@ -47,11 +47,11 @@ public class Intake extends SubsystemBase {
             20.0,
             5.0));
 
-    DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "ossilate", 12.0);
+    DoubleSupplier ossilateScale = new DoubleSupplier(LPREFIX + "ossilate", 1.0);
     DoubleSupplier crunchSpeed = new DoubleSupplier(LPREFIX + "crunchSpeed", 4.0);
 
     DoubleSupplier bumpPos = new DoubleSupplier(LPREFIX + "bumpPos", 30.0);
-    DoubleSupplier downPos = new DoubleSupplier(LPREFIX + "rotDownPos", 80.0);
+    DoubleSupplier downPos = new DoubleSupplier(LPREFIX + "rotDownPos", 98.0);
     DoubleSupplier idlePos = new DoubleSupplier(LPREFIX + "rotIdle", 60.0);
     DoubleSupplier intakePos = new DoubleSupplier(LPREFIX + "intakePos", 92.0);
 
@@ -111,10 +111,13 @@ public class Intake extends SubsystemBase {
 
     private double nextRotSetpoint() {
         double time = Timer.getFPGATimestamp() - shootStart;
+        double h = 70d;
+        double l = 35d;
+        double f = 7;
         return switch (state) {
             case Intaking -> intakePos.get();
             case Oscillating ->
-                downPos.get() - ((Math.sin(time * 9.0) + 1.0) * 0.5 * ossilateScale.get());
+                (ossilateScale.get() * ((h-l)/2.0) * Math.sin(f * time) + (h-l));
             case Bump -> bumpPos.get();
             default -> idlePos.get();
         };
@@ -125,7 +128,7 @@ public class Intake extends SubsystemBase {
             case Intaking -> voltage.get();
             case PreloadEject -> shootingVoltage.get();
             case Oscillating -> shootingVoltage.get();
-            default -> 0.0;
+            default -> 5.0;
         };
     }
 

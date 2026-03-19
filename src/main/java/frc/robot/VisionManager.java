@@ -49,6 +49,16 @@ public class VisionManager {
                     case CLOSEST_HEIGHT -> pose = estimators[i].estimateClosestToCameraHeightPose(r);
                 };
 
+                // Try fallback
+                if(!pose.isPresent()) {
+                    pose = switch (VisionConstants.FALLBACK_METHOD) {
+                    case COPROC_MULTI_TAG -> pose = estimators[i].estimateCoprocMultiTagPose(r);
+                    case AVERAGE_BEST -> pose = estimators[i].estimateAverageBestTargetsPose(r);
+                    case LEAST_AMBIGUOUS -> pose = estimators[i].estimateLowestAmbiguityPose(r);
+                    case CLOSEST_HEIGHT -> pose = estimators[i].estimateClosestToCameraHeightPose(r);
+                };
+                }
+
                 if (pose.isPresent()) {
                     poses.add(pose.get());
                 }

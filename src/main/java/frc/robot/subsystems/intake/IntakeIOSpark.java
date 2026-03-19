@@ -4,15 +4,18 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeIOSpark implements IntakeIO {
     SparkFlex spark;
     SparkMax rotSpark;
+    DutyCycleEncoder rotEncoder;
 
     public IntakeIOSpark() {
         spark = new SparkFlex(IntakeConstants.PORT, MotorType.kBrushless);
         rotSpark = new SparkMax(IntakeConstants.ROT_PORT, MotorType.kBrushless);
+        rotEncoder = new DutyCycleEncoder(1);
     }
 
     @Override
@@ -27,6 +30,7 @@ public class IntakeIOSpark implements IntakeIO {
 
     public double getRotPosition() {
         return rotSpark.getEncoder().getPosition();
+        // return rotEncoder.get();
     }
 
     public double getRotVelocity() {
