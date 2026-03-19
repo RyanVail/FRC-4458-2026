@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,11 +13,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.FieldConstants;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 
@@ -54,6 +52,7 @@ public class DriveIOSwerve implements DriveIO {
 
     @Override
     public void periodic() {
+        Logger.recordOutput("eijiefjo", swerveDrive.getModules()[1].getAbsolutePosition());
     }
 
     @Override

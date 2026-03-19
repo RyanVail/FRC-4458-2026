@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "StartFlywheel"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Outpost Start Near Climber"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Shoot"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "LockOnHub"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

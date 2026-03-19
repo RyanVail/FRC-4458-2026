@@ -218,7 +218,7 @@ public class Flywheel extends SubsystemBase {
         unjam = false;
     }
 
-    private double getTargetVelocity() {
+    private double  getTargetVelocity() {
         if(Preferences.getBoolean(LPREFIX + "/useTmp", false)) return tmpVelocity.get();
         return switch (state) {
             case Interp -> velocityMap.get(distance.get());
