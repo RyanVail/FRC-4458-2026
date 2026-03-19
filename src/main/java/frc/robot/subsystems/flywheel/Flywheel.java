@@ -221,7 +221,7 @@ public class Flywheel extends SubsystemBase {
         unjam = false;
     }
 
-    private double getTargetVelocity() {
+    private double  getTargetVelocity() {
         if(Preferences.getBoolean(LPREFIX + "/useTmp", false)) return tmpVelocity.get();
         if(pose.get().getX() > 5 && pose.get().getX() < 11) return 3500;
         return switch (state) {
